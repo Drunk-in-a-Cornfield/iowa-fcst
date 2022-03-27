@@ -1,3 +1,13 @@
+Requirements:
+- Docker: https://docs.docker.com/get-docker/
+- Docker Compose: https://docs.docker.com/compose/install/
+- All other dependencies are Dockerized, so you shouldn't need to install anything else manually
+  - The quick start instructions below will:
+    - Create all the requisite containers
+    - Install dependencies
+    - Load all of our data into an instance of PostgreSQL
+- Once the class is done, you can simply remove the containers/images and no artifacts will be left on your system (other than Docker and Docker Compose)
+
 Quick start:
 - Extract data csv to `./database/Iowa_Liquor_Sales.csv`
 - Run `docker-compose up --build`
