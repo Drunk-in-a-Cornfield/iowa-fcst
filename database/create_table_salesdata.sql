@@ -1,4 +1,5 @@
-CREATE TABLE salesdata (
+-- create salesdata table
+CREATE TABLE IF NOT EXISTS salesdata (
   "Invoice/Item Number" TEXT UNIQUE NOT NULL,
   "Date" DATE,
   "Store Number" INTEGER,
@@ -23,4 +24,6 @@ CREATE TABLE salesdata (
   "Sale (Dollars)" TEXT,
   "Volume Sold (Liters)" DOUBLE PRECISION,
   "Volume Sold (Gallons)" DOUBLE PRECISION
-)
+);
+
+COPY salesdata FROM '/share/database/Iowa_Liquor_Sales.csv' CSV HEADER;
