@@ -7,6 +7,22 @@ Quick start:
 - To shut down the stack, use `docker-compose down`
   - To bring it back up, use `docker-compose up`
 
+Contributing:
+- Please do not commit directly to master!
+- The following workflow will make it easy for us to revert code if needed
+  - Create a new branch
+  - Add your code
+  - Submit a pull request
+  - Squash and merge your own pull request
+  - Delete the branch
+
+ui:
+- Once the stack is up, you can view the ui in your browser at `localhost:3000`
+
+api:
+- This is where the Python ML code will live
+- Currently has Flask server running at port 4000
+
 pgAdmin:
 - Navigate your browser to `localhost:5050`
 - Login credentials: `root@gatech.edu` / `root`
@@ -15,6 +31,9 @@ pgAdmin:
   - It will prompt you for a password; enter `root`
 - pgAdmin provides an easy interface for browsing/querying the data
 
+TODO:
+- add UI hot reloading for faster development cycles
+- how to improve development cycle time for python api?
 
 Development notes:
 - Database credentials are hard-coded and committed to the repository
