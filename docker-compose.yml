@@ -9,9 +9,9 @@ services:
     ports:
       - 3000:3000
 
-  api:
-    build: ./api
-    container_name: api
+  mlservice:
+    build: ./mlservice
+    container_name: mlservice
     restart: always
     depends_on:
       - database
