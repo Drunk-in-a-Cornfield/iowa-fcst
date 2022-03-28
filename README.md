@@ -32,7 +32,7 @@
 ## ui
 - Once the stack is up, you can view the ui in your browser at `localhost:3000`
 
-## api
+## mlservice
 - This is where the Python ML code will live
 - Currently has Flask server running at port 4000
 
