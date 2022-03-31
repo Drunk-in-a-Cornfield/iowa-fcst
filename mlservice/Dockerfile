@@ -5,6 +5,7 @@ FROM python:3.8-slim-buster
 
 RUN pip3 install flask
 RUN pip3 install psycopg2-binary
+RUN pip3 install seaborn
 WORKDIR app
 COPY * /app/
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4000"]
