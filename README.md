@@ -49,6 +49,8 @@
 ## TODO
 - add UI hot reloading for faster development cycles
 - how to improve development cycle time for python api?
+- ETL
+- ML
 
 ## Credentials
 - Database credentials are hard-coded and committed to the repository
