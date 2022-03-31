@@ -22,6 +22,7 @@ def query(connection, query) :
     cursor.execute(query)
     return cursor.fetchall()
 
+
 ##########
 ### Flask
 ##########
@@ -85,6 +86,16 @@ def test():
     img.seek(0)
     return send_file(img, mimetype='img/png')
 
+@app.route('/sales_by_year')
+def sales_by_year():
+    results = query(
+        db_connection,
+        """
+            SELECT * FROM public.salesdata
+            LIMIT 10
+        """
+    )
+    return str(results)
 
 if __name__ == "__main__":
     app.run(debug=True)
