@@ -47,10 +47,15 @@
 # Other Notes
 
 ## TODO
-- add UI hot reloading for faster development cycles
-- how to improve development cycle time for python api?
 - ETL
 - ML
+
+## DONE
+- Add UI hot reloading for faster development cycles
+  - Flask
+- Add Postgres Connector psycopg2
+- Expose database port 5432
+- Add sales_by_year API to return SQL results
 
 ## Credentials
 - Database credentials are hard-coded and committed to the repository
