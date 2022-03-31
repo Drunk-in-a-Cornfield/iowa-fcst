@@ -56,6 +56,8 @@
 - Add Postgres Connector psycopg2
 - Expose database port 5432
 - Add sales_by_year API to return SQL results
+- Add /eda/sales_by_year API to return Seaborn Image
+- Add EDA Jupyter Notebook
 
 ## Credentials
 - Database credentials are hard-coded and committed to the repository

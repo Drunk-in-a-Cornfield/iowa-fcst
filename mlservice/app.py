@@ -22,7 +22,6 @@ def query(connection, query) :
     cursor.execute(query)
     return cursor.fetchall()
 
-
 ##########
 ### Flask
 ##########
