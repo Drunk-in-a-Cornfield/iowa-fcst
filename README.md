@@ -62,8 +62,8 @@
 - Add PostGIS
 - ETL
   - Summary
-    - Deleted Rows: 92245
-    - Remaining Rows: 12498832
+    - Deleted Rows: 92245 (0.73%)
+    - Remaining Rows: 12498832 (99.27%)
     - Original Rows: 12591077
   - Transformation
     - Extract year from date
