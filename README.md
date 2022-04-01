@@ -58,6 +58,8 @@
 - Add sales_by_year API to return SQL results
 - Add /eda/sales_by_year API to return Seaborn Image
 - Add EDA Jupyter Notebook
+- Add EDA Docker Compose
+- Add Check Duplication SQL script in EDA
 
 ## Credentials
 - Database credentials are hard-coded and committed to the repository
