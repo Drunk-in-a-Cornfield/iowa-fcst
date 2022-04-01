@@ -50,5 +50,10 @@ services:
     ports:
       - '5050:80'
 
+  eda:
+    build: ./eda
+    container_name: 'eda'
+    restart: always
+
 volumes:
   database-data: # named volumes can be managed easier using docker-compose
