@@ -47,7 +47,6 @@
 # Other Notes
 
 ## TODO
-- ETL
 - ML
 
 ## DONE
@@ -60,6 +59,25 @@
 - Add EDA Jupyter Notebook
 - Add EDA Docker Compose
 - Add Check Duplication SQL script in EDA
+- Add PostGIS
+- ETL
+  - Summary
+    - Deleted Rows: 92245 (0.73%)
+    - Remaining Rows: 12498832 (99.27%)
+    - Original Rows: 12591077
+  - Transformation
+    - Extract year from date
+    - Extract month from date
+    - Extract year-month from date
+    - Extract day from date
+    - Extract dow from date
+    - Convert Store Name, Address, City, Store Location, County, Category Name, Vendor Name, Item Description to upper case
+    - Convert Zip Code 712-2 to 51529
+    - Remove $ from State Bottle Cost, State Bottle Retail, Sale (Dollars)
+    - Convert all data type to proper format
+  - Delete
+    - Delete all rows is NULL
+    - Delete all rows is 0
 
 ## Credentials
 - Database credentials are hard-coded and committed to the repository
