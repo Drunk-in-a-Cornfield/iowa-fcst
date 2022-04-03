@@ -78,6 +78,19 @@
   - Delete
     - Delete all rows is NULL
     - Delete all rows is 0
+- Feature Engineering (One hot encoding & Pivot)
+  - Create City by Store Number
+  - Create Zip Code by Store Number
+  - Create County Number by Store Number
+  - Create Category by Store Number with Pivot
+  - Create Vendor Number by Store Number with Pivot
+  - Create Item Number by Store Number with Pivot
+  - Create Average Monthly Pack by Store Number with Pivot
+  - Create Average Monthly Bottle Volume in ML by Store Number with Pivot
+  - Create Average Monthly Bottles Sold by Store Number with Pivot
+  - Create Average Monthly Sales by Store Number with Pivot
+  - Create Average Monthly Profit by Store Number with Pivot
+  - Combine all the features based on store number
 
 ## Credentials
 - Database credentials are hard-coded and committed to the repository
