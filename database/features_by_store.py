@@ -386,3 +386,6 @@ df = pd.concat(
     ],
     axis=1
 )
+
+columns = [i for i in df.columns.tolist() if i != 'store_number']
+df = df[columns]
