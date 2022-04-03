@@ -22,6 +22,7 @@ SELECT
 		'-',
 		LPAD( CAST( EXTRACT(month FROM "Date") AS VARCHAR), 2, '0' )
 	) AS date_year_month__c,
+	CAST( EXTRACT(quarter FROM "Date") AS INTEGER ) AS date_quarter__c,
 	CAST( EXTRACT(day FROM "Date") AS INTEGER ) AS date_day__c,
 	CAST( EXTRACT(dow FROM "Date") AS INTEGER ) AS date_dow__c,
 	"Store Number" AS store_number__c,
@@ -48,7 +49,9 @@ SELECT
 	"Bottles Sold" AS bottles_sold__c,
 	CAST( REPLACE("Sale (Dollars)", '$', '') AS DECIMAL(38, 2) ) AS sale_dollars__c,
 	"Volume Sold (Liters)" AS volume_sold_liters__c,
-	"Volume Sold (Gallons)" AS volume_sold_gallons__c
+	"Volume Sold (Gallons)" AS volume_sold_gallons__c,
+	CAST( REPLACE("State Bottle Cost", '$', '') AS DECIMAL(38, 2) ) * "Bottles Sold" AS cost_dollars__c,
+	CAST( REPLACE("Sale (Dollars)", '$', '') AS DECIMAL(38, 2) ) - (CAST( REPLACE("State Bottle Cost", '$', '') AS DECIMAL(38, 2) ) * "Bottles Sold") AS profit_dollars__c
 FROM public.salesdata;
 
 DELETE FROM public.salesdata2
