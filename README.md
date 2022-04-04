@@ -15,6 +15,7 @@
   - First build will take some time to be available as Docker loads the 3.3GB of data into Postgres
   - Once the container and volumes are built, subsequent loads will be much faster
   - When the data is done loading, you'll see the following docker-compose log: `LOG:  database system is ready to accept connections`
+    - On first build, `mlservice` will keep crashing and restarting until PG is up and accepting connections. There's probably a way to configure psycopg to wait and retry instead of crashing, but not sure it's worth spending time on that right now.
 - To shut down the stack, use `docker-compose down`
   - To bring it back up, use `docker-compose up`
 
@@ -46,7 +47,7 @@
 
 ## FAQ
 
-** How do I get a shell session into a running container? **
+**How do I get a shell session into a running container?**
 
 `docker exec -it [container_name] [shell]`
 
