@@ -389,3 +389,4 @@ df = pd.concat(
 
 columns = [i for i in df.columns.tolist() if i != 'store_number']
 df = df[columns]
+df.to_pickle('database/features_by_store.pkl')

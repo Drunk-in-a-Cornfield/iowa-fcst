@@ -48,6 +48,10 @@
 
 ## TODO
 - ML
+  - I haven't applied dimensionality reduction yet. It should improve the model performance once it is applied.
+  - I haven't put any hyperparameter tuning yet.  It should improve the model performance once it is applied.
+  - It is just linear regression. We can try other regression methods.
+  - It predicts negative sales / profit. We should improve the model to avoid it.
 
 ## DONE
 - Add UI hot reloading for faster development cycles
@@ -91,6 +95,21 @@
   - Create Average Monthly Sales by Store Number with Pivot
   - Create Average Monthly Profit by Store Number with Pivot
   - Combine all the features based on store number
+- ML
+  - Add Kmeans clustering for store similarity (k=3)
+    - Add mlservice/k_means.pkl
+  - Add Linear Regression to predict store monthly sales
+    - RMSE (Original): 23272.12673353224
+    - RMSE (Cluster: 0): 11025.296839283432
+    - RMSE (Cluster: 1): 5221.432212006931
+    - RMSE (Cluster: 2): 8454.05534826173
+    - RMSE (Cluster: Average): 8233.59479987
+  - Add Linear Regression to predict store monthly profit
+    - RMSE (Original): 21682.345592407626
+    - RMSE (Cluster: 0): 3381.9545784247493
+    - RMSE (Cluster: 1): 2957.6527283345645
+    - RMSE (Cluster: 2): 8523.265087710313
+    - RMSE (Cluster: Average): 4954.29079817
 
 ## Credentials
 - Database credentials are hard-coded and committed to the repository
