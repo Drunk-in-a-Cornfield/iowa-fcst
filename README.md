@@ -44,6 +44,18 @@
   - It will prompt you for a password; enter `root`
 - pgAdmin provides an easy interface for browsing/querying the data
 
+## FAQ
+
+** How do I get a shell session into a running container? **
+
+`docker exec -it [container_name] [shell]`
+
+For containers which have bash (such as the Postgres container), this will work:
+`docker exec -it postgres bash`
+
+For containers which don't have bash, use:
+`docker exec -it [container name] sh`
+
 # Other Notes
 
 ## TODO
