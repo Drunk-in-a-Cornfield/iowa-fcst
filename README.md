@@ -46,7 +46,7 @@
 
 ## FAQ
 
-** How do I get a shell session into a running container? **
+**How do I get a shell session into a running container?**
 
 `docker exec -it [container_name] [shell]`
 
