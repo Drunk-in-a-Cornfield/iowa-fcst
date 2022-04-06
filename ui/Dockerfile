@@ -10,4 +10,4 @@ VOLUME ["/usr/src/app"]
 
 WORKDIR /usr/src/app
 
-CMD [ "node", "server.js"]
+CMD [ "npm", "start"]
