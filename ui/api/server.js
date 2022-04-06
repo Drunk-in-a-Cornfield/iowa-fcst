@@ -9,6 +9,7 @@ const app = express();
 app.use(express.static('public'));
 
 app.get('/test-endpoint', async (req, res) => {
+  // check that mlservice is reachable
   try {
     const ml_res = await axios.get('http://mlservice:4000');
     res.send(ml_res.data);
