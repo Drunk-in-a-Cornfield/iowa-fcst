@@ -1,9 +1,10 @@
 from sklearn.cluster import KMeans
+from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
 import matplotlib.pyplot as plt
 
 
-df = pd.read_pickle('database/features_by_store.pkl')
+df = pd.read_pickle('/database/features_by_store.pkl')
 
 ignore_columns = [
     'average_monthly_sales',
@@ -49,4 +50,4 @@ df['cluster'] = kmeans.labels_
 print('Number of Stores (Cluster 0): ', len(df[df['cluster'] == 0]))
 print('Number of Stores (Cluster 1): ', len(df[df['cluster'] == 1]))
 print('Number of Stores (Cluster 2): ', len(df[df['cluster'] == 2]))
-df.to_pickle('mlservice/k_means.pkl')
+df.to_pickle('./k_means.pkl')
