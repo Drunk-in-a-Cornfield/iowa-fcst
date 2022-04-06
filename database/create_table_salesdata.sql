@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS salesdata (
   "Volume Sold (Gallons)" DOUBLE PRECISION
 );
 
-COPY salesdata FROM '/share/database/Iowa_Liquor_Sales.csv' CSV HEADER;
+COPY salesdata FROM '/share/Iowa_Liquor_Sales.csv' CSV HEADER;
 
 -- create salesdata2 from Ken's etl.sql
 
