@@ -18,8 +18,6 @@ db_connection = psycopg2.connect(
     dbname=database
 )
 
-db_connection2 = engine.connect()
-
 def query(connection, query) :
     cursor = db_connection.cursor()
     cursor.execute(query)
@@ -389,4 +387,4 @@ df = pd.concat(
 
 columns = [i for i in df.columns.tolist() if i != 'store_number']
 df = df[columns]
-df.to_pickle('database/features_by_store.pkl')
+df.to_pickle('./features_by_store.pkl')
