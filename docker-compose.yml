@@ -29,7 +29,6 @@ services:
     command: sh -c "/wait && python3 /app/app.py"
     volumes:
       - ./mlservice:/app
-      - ./database:/database
   
   database:
     build: ./database
