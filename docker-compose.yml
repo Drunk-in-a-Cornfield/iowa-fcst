@@ -8,6 +8,8 @@ services:
       - database
     ports:
       - 3000:3000
+    volumes:
+      - ./ui:/usr/src/app
 
   mlservice:
     build: ./mlservice
@@ -20,7 +22,9 @@ services:
       FLASK_APP: ./app.py
     ports:
       - 4000:4000
-    volumes:  ['./mlservice:/app', './mlservice:/Dockerfile']
+    volumes:
+      - ./mlservice:/app
+      - ./database:/database
   
   database:
     build: ./database
