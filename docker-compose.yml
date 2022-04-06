@@ -22,7 +22,8 @@ services:
       FLASK_APP: ./app.py
     ports:
       - 4000:4000
-    volumes:  ['./mlservice:/app', './mlservice:/Dockerfile']
+    volumes:
+      - ./mlservice:/app
   
   database:
     build: ./database
