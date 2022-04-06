@@ -2,13 +2,12 @@
 
 FROM node:16-alpine3.14
 
+RUN echo "alias ll='ls -alF --group-directories-first'" >> /root/.profile
+
+# mount host directory to container
+# enables editing UI files on host -> immediately reflected in container and express server
+VOLUME ["/usr/src/app"]
+
 WORKDIR /usr/src/app
-
-# copy package.json and install packages
-COPY package*.json ./
-RUN npm install
-
-# copy application source code into container
-COPY . .
 
 CMD [ "node", "server.js"]

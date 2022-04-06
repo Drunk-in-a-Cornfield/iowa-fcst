@@ -8,6 +8,8 @@ services:
       - database
     ports:
       - 3000:3000
+    volumes:
+      - ./ui:/usr/src/app
 
   mlservice:
     build: ./mlservice
