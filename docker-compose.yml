@@ -26,7 +26,7 @@ services:
       WAIT_HOST_CONNECT_TIMEOUT: 30
     ports:
       - 4000:4000
-    command: sh -c "/wait && python3 -m flask run --host=0.0.0.0 --port=4000"
+    command: sh -c "/wait && python3 /app/app.py"
     volumes:
       - ./mlservice:/app
       - ./database:/database
@@ -35,8 +35,6 @@ services:
     build: ./database
     container_name: 'postgres'
     restart: always
-    expose:
-      - '5432'
     ports:
       - '5432:5432'
     environment:
@@ -45,7 +43,7 @@ services:
       POSTGRES_DB: 'liquor_sales'
     volumes:
       - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
-      - ./database:/share/database
+      - ./database:/share/
 
   pgadmin:
     build: ./pgadmin
