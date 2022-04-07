@@ -9,7 +9,7 @@ from k_means import create_k_means_pickle
 ### Database Connection
 ########################
 
-hostname = 'postgres'
+hostname = 'database'
 username = 'root'
 password = 'root'
 database = 'liquor_sales'

@@ -6,7 +6,7 @@ import psycopg2
 ### Database Connection
 ########################
 
-hostname = 'postgres'
+hostname = 'database'
 username = 'root'
 password = 'root'
 database = 'liquor_sales'
