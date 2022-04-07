@@ -3,7 +3,7 @@
     "1": {
       "Name": "root@gatech.edu",
       "Group": "Servers",
-      "Host": "postgres",
+      "Host": "database",
       "Port": 5432,
       "MaintenanceDB": "postgres",
       "Username": "root",

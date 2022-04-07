@@ -1,11 +1,15 @@
 from flask import Flask
+from os.path import exists
 import psycopg2
+
+from features_by_store import create_feature_pickle
+from k_means import create_k_means_pickle
 
 ########################
 ### Database Connection
 ########################
 
-hostname = 'postgres'
+hostname = 'database'
 username = 'root'
 password = 'root'
 database = 'liquor_sales'
@@ -86,4 +90,20 @@ def test():
     return send_file(img, mimetype='img/png')
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True)
+    print('checking for features_by_store.pkl', flush=True)
+    if not exists('./features_by_store.pkl'):
+        print('did not detect ./features_by_store.pkl; building now', flush=True)
+        create_feature_pickle()
+        print('done building ./features_by_store.pkl', flush=True)
+    else:
+        print('found existing feature_by_store.pkl', flush=True)
+
+    print('checking for existing k_means.pkl')        
+    if not exists('./k_means.pkl'):
+        print('did not detect ./k_means.pkl; building now', flush=True)
+        create_k_means_pickle()
+        print('done building ./k_means.pkl', flush=True)
+    else:
+        print('found existing k_means.pkl', flush=True)
+    
+    app.run(host='0.0.0.0', port=4000, debug=True)

@@ -52,7 +52,7 @@
 `docker exec -it [container_name] [shell]`
 
 For containers which have bash (such as the Postgres container), this will work:
-`docker exec -it postgres bash`
+`docker exec -it database bash`
 
 For containers which don't have bash, use:
 `docker exec -it [container name] sh`

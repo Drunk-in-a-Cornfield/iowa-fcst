@@ -6,7 +6,7 @@ import psycopg2
 ### Database Connection
 ########################
 
-hostname = 'localhost'
+hostname = 'database'
 username = 'root'
 password = 'root'
 database = 'liquor_sales'
@@ -351,40 +351,40 @@ def create_feature_average_monthly_profit_by_store_number():
     df = df.apply(pd.to_numeric)
     return df
 
+def create_feature_pickle():
+    # feature_store_name_by_store_number_df = create_feature_store_name_by_store_number()
+    # feature_address_by_store_number_df = create_feature_address_by_store_number()
+    feature_city_by_store_number_df = create_feature_city_by_store_number()
+    feature_zip_code_by_store_number_df = create_feature_zip_code_by_store_number()
+    # feature_store_location_by_store_number_df = create_feature_store_location_by_store_number()
+    feature_county_number_by_store_number_df = create_feature_county_number_by_store_number()
+    # feature_county_by_store_number_df = create_feature_county_by_store_number()
+    feature_category_by_store_number_pivot_df = create_feature_category_by_store_number_pivot()
+    feature_vendor_number_by_store_number_pivot_df = create_feature_vendor_number_by_store_number_pivot()
+    feature_item_number_by_store_number_pivot_df = create_feature_item_number_by_store_number_pivot()
+    feature_average_monthly_pack_by_store_number_pivot_df = create_feature_average_monthly_pack_by_store_number_pivot()
+    feature_average_monthly_bottle_volume_ml_by_store_number_pivot_df = create_feature_average_monthly_bottle_volume_ml_by_store_number_pivot()
+    feature_average_monthly_bottles_sold_by_store_number_df = create_feature_average_monthly_bottles_sold_by_store_number()
+    feature_average_monthly_sales_by_store_number_df = create_feature_average_monthly_sales_by_store_number()
+    feature_average_monthly_profit_by_store_number_df = create_feature_average_monthly_profit_by_store_number()
 
-# feature_store_name_by_store_number_df = create_feature_store_name_by_store_number()
-# feature_address_by_store_number_df = create_feature_address_by_store_number()
-feature_city_by_store_number_df = create_feature_city_by_store_number()
-feature_zip_code_by_store_number_df = create_feature_zip_code_by_store_number()
-# feature_store_location_by_store_number_df = create_feature_store_location_by_store_number()
-feature_county_number_by_store_number_df = create_feature_county_number_by_store_number()
-# feature_county_by_store_number_df = create_feature_county_by_store_number()
-feature_category_by_store_number_pivot_df = create_feature_category_by_store_number_pivot()
-feature_vendor_number_by_store_number_pivot_df = create_feature_vendor_number_by_store_number_pivot()
-feature_item_number_by_store_number_pivot_df = create_feature_item_number_by_store_number_pivot()
-feature_average_monthly_pack_by_store_number_pivot_df = create_feature_average_monthly_pack_by_store_number_pivot()
-feature_average_monthly_bottle_volume_ml_by_store_number_pivot_df = create_feature_average_monthly_bottle_volume_ml_by_store_number_pivot()
-feature_average_monthly_bottles_sold_by_store_number_df = create_feature_average_monthly_bottles_sold_by_store_number()
-feature_average_monthly_sales_by_store_number_df = create_feature_average_monthly_sales_by_store_number()
-feature_average_monthly_profit_by_store_number_df = create_feature_average_monthly_profit_by_store_number()
+    df = pd.concat(
+        [
+            feature_city_by_store_number_df,
+            feature_zip_code_by_store_number_df,
+            feature_county_number_by_store_number_df,
+            feature_category_by_store_number_pivot_df,
+            feature_vendor_number_by_store_number_pivot_df,
+            feature_item_number_by_store_number_pivot_df,
+            feature_average_monthly_pack_by_store_number_pivot_df,
+            feature_average_monthly_bottle_volume_ml_by_store_number_pivot_df,
+            feature_average_monthly_bottles_sold_by_store_number_df,
+            feature_average_monthly_sales_by_store_number_df,
+            feature_average_monthly_profit_by_store_number_df
+        ],
+        axis=1
+    )
 
-df = pd.concat(
-    [
-        feature_city_by_store_number_df,
-        feature_zip_code_by_store_number_df,
-        feature_county_number_by_store_number_df,
-        feature_category_by_store_number_pivot_df,
-        feature_vendor_number_by_store_number_pivot_df,
-        feature_item_number_by_store_number_pivot_df,
-        feature_average_monthly_pack_by_store_number_pivot_df,
-        feature_average_monthly_bottle_volume_ml_by_store_number_pivot_df,
-        feature_average_monthly_bottles_sold_by_store_number_df,
-        feature_average_monthly_sales_by_store_number_df,
-        feature_average_monthly_profit_by_store_number_df
-    ],
-    axis=1
-)
-
-columns = [i for i in df.columns.tolist() if i != 'store_number']
-df = df[columns]
-df.to_pickle('./features_by_store.pkl')
+    columns = [i for i in df.columns.tolist() if i != 'store_number']
+    df = df[columns]
+    df.to_pickle('./features_by_store.pkl')
