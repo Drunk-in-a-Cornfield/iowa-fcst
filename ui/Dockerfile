@@ -15,5 +15,3 @@ RUN chmod +x /wait
 VOLUME ["/usr/src/app"]
 
 WORKDIR /usr/src/app
-
-CMD [ "npm", "start"]
