@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 
 def create_k_means_pickle():
-    df = pd.read_pickle('./features_by_store.pkl')
+    df = pd.read_pickle('./src/helpers/features_by_store.pkl')
 
     ignore_columns = [
         'average_monthly_sales',
@@ -51,4 +51,4 @@ def create_k_means_pickle():
     print('Number of Stores (Cluster 0): ', len(df[df['cluster'] == 0]))
     print('Number of Stores (Cluster 1): ', len(df[df['cluster'] == 1]))
     print('Number of Stores (Cluster 2): ', len(df[df['cluster'] == 2]))
-    df.to_pickle('./k_means.pkl')
+    df.to_pickle('./src/helpers/k_means.pkl')

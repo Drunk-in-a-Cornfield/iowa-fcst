@@ -32,7 +32,7 @@ services:
       WAIT_HOST_CONNECT_TIMEOUT: 30
     ports:
       - 4000:4000
-    command: sh -c "/wait && python3 /app/app.py"
+    command: sh -c "/wait && python3 /app/src/app.py"
     volumes:
       - ./mlservice:/app
   

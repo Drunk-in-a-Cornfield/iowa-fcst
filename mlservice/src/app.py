@@ -2,8 +2,8 @@ from flask import Flask
 from os.path import exists
 import psycopg2
 
-from features_by_store import create_feature_pickle
-from k_means import create_k_means_pickle
+from helpers.features_by_store import create_feature_pickle
+from helpers.k_means import create_k_means_pickle
 
 ########################
 ### Database Connection
@@ -25,6 +25,26 @@ def query(connection, query) :
     cursor = connection.cursor()
     cursor.execute(query)
     return cursor.fetchall()
+
+##############################
+### Create / load pickle files
+##############################
+
+print('checking for features_by_store.pkl', flush=True)
+if not exists('./src/helpers/features_by_store.pkl'):
+    print('did not detect ./src/helpers/features_by_store.pkl; building now', flush=True)
+    create_feature_pickle()
+    print('done building ./src/helpers/features_by_store.pkl', flush=True)
+else:
+    print('found existing feature_by_store.pkl', flush=True)
+
+print('checking for existing k_means.pkl')        
+if not exists('./src/helpers/k_means.pkl'):
+    print('did not detect ./src/helpers/k_means.pkl; building now', flush=True)
+    create_k_means_pickle()
+    print('done building ./src/helpers/k_means.pkl', flush=True)
+else:
+    print('found existing k_means.pkl', flush=True)
 
 ##########
 ### Flask
@@ -90,20 +110,4 @@ def test():
     return send_file(img, mimetype='img/png')
 
 if __name__ == "__main__":
-    print('checking for features_by_store.pkl', flush=True)
-    if not exists('./features_by_store.pkl'):
-        print('did not detect ./features_by_store.pkl; building now', flush=True)
-        create_feature_pickle()
-        print('done building ./features_by_store.pkl', flush=True)
-    else:
-        print('found existing feature_by_store.pkl', flush=True)
-
-    print('checking for existing k_means.pkl')        
-    if not exists('./k_means.pkl'):
-        print('did not detect ./k_means.pkl; building now', flush=True)
-        create_k_means_pickle()
-        print('done building ./k_means.pkl', flush=True)
-    else:
-        print('found existing k_means.pkl', flush=True)
-    
     app.run(host='0.0.0.0', port=4000, debug=True)
