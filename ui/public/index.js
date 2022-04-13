@@ -3,45 +3,10 @@ const MARGIN = { top: 20, right: 50, bottom: 40, left: 40 };
 const WIDTH = 960 - MARGIN.left - MARGIN.right;
 const HEIGHT = 500 - MARGIN.top - MARGIN.bottom;
 
-const mainDiv = document.querySelector('#main');
+// helper functions
 
-d3.json('/cluster-data').then((records) => {
-  console.log('records:', records);
-
-  // find min/max x- and y- values
-  let min_pca_0 = null;
-  let max_pca_0 = null;
-  let min_pca_1 = null;
-  let max_pca_1 = null;
-
-  for (const record of records) {
-    if (min_pca_0 === null || record.pca_0 < min_pca_0)
-      min_pca_0 = record.pca_0;
-
-    if (max_pca_0 === null || record.pca_0 > max_pca_0)
-      max_pca_0 = record.pca_0;
-
-    if (min_pca_1 === null || record.pca_1 < min_pca_1)
-      min_pca_1 = record.pca_1;
-
-    if (max_pca_1 === null || record.pca_1 > max_pca_1)
-      max_pca_1 = record.pca_1;
-  }
-
-  console.log('min_pca_0:', min_pca_0);
-  console.log('max_pca_0:', max_pca_0);
-  console.log('min_pca_1:', min_pca_1);
-  console.log('max_pca_1:', max_pca_1);
-
-  // create the svg
-  const svg = d3
-    .select('div#main')
-    .append('svg')
-    .attr('width', WIDTH + MARGIN.left + MARGIN.right)
-    .attr('height', HEIGHT + MARGIN.top + MARGIN.bottom)
-    .attr('id', 'svg-a')
-    .append('g')
-    .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
+const buildAxes = (props) => {
+  const { svg, min_pca_0, max_pca_0, min_pca_1, max_pca_1 } = props;
 
   // scale the axes
   const xScale = d3
@@ -84,4 +49,43 @@ d3.json('/cluster-data').then((records) => {
     .attr('text-anchor', 'middle')
     .attr('transform', `translate(-20,${HEIGHT / 2 + MARGIN.top}) rotate(-90)`)
     .text('PCA-1');
+};
+
+const mainDiv = document.querySelector('#main');
+
+// load the data and build scatter plot
+d3.json('/cluster-data').then((records) => {
+  console.log('records:', records);
+
+  // find min/max x- and y- values
+  let min_pca_0 = null;
+  let max_pca_0 = null;
+  let min_pca_1 = null;
+  let max_pca_1 = null;
+
+  for (const record of records) {
+    if (min_pca_0 === null || record.pca_0 < min_pca_0)
+      min_pca_0 = record.pca_0;
+
+    if (max_pca_0 === null || record.pca_0 > max_pca_0)
+      max_pca_0 = record.pca_0;
+
+    if (min_pca_1 === null || record.pca_1 < min_pca_1)
+      min_pca_1 = record.pca_1;
+
+    if (max_pca_1 === null || record.pca_1 > max_pca_1)
+      max_pca_1 = record.pca_1;
+  }
+
+  // create the svg
+  const svg = d3
+    .select('div#main')
+    .append('svg')
+    .attr('width', WIDTH + MARGIN.left + MARGIN.right)
+    .attr('height', HEIGHT + MARGIN.top + MARGIN.bottom)
+    .attr('id', 'svg-a')
+    .append('g')
+    .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
+
+  buildAxes({ svg, min_pca_0, max_pca_0, min_pca_1, max_pca_1 });
 });
