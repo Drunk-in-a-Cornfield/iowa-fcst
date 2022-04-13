@@ -40,8 +40,8 @@ def reverse_one_hot(df_k_means):
         'county_no': df_county_no
     })
 
-    df_averages = df_k_means.iloc[:, 8722:8725]
+    df_averages_and_cluster = df_k_means.iloc[:, 8722:8726]
 
-    df = df.join(df_averages)
+    df = df.join(df_averages_and_cluster)
 
     return df
