@@ -11,7 +11,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 
-df = pd.read_pickle('./features_by_store.pkl')
+df = pd.read_pickle('../modules/features_by_store.pkl')
 
 ignore_columns = ['average_monthly_sales', 'average_monthly_profit']
 
@@ -41,6 +41,7 @@ u_labels = np.unique(label)
 print('label:', label)
 print('u_labels:', u_labels)
 print('X:', X)
+print(f'principalComponents ({principalComponents.shape}):\n', principalComponents)
 
 # plotting the results:
 for i in u_labels:

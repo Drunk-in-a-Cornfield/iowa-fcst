@@ -387,4 +387,4 @@ def create_feature_pickle():
 
     columns = [i for i in df.columns.tolist() if i != 'store_number']
     df = df[columns]
-    df.to_pickle('./src/helpers/features_by_store.pkl')
+    df.to_pickle('./src/modules/features_by_store.pkl')
