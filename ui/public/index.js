@@ -40,6 +40,21 @@ const buildAxes = (props) => {
     .text('PCA-1');
 };
 
+const renderScatterplotPoints = (props) => {
+  const { svg, records, xScale, yScale, colorScale } = props;
+
+  svg
+    .selectAll('.dot')
+    .data(records)
+    .enter()
+    .append('circle')
+    .attr('class', 'dot')
+    .attr('r', 3.5)
+    .attr('cx', (d) => xScale(d.pca_0))
+    .attr('cy', (d) => yScale(d.pca_1))
+    .style('fill', (d) => colorScale(d.cluster));
+};
+
 const mainDiv = document.querySelector('#main');
 
 // load the data and build scatter plot
@@ -90,15 +105,5 @@ d3.json('/cluster-data').then((records) => {
     .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
 
   buildAxes({ svg, xScale, yScale });
-
-  svg
-    .selectAll('.dot')
-    .data(records)
-    .enter()
-    .append('circle')
-    .attr('class', 'dot')
-    .attr('r', 3.5)
-    .attr('cx', (d) => xScale(d.pca_0))
-    .attr('cy', (d) => yScale(d.pca_1))
-    .style('fill', (d) => colorScale(d.cluster));
+  renderScatterplotPoints({ svg, records, xScale, yScale, colorScale });
 });
