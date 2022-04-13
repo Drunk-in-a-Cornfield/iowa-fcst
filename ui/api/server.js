@@ -8,10 +8,9 @@ const app = express();
 
 app.use(express.static('public'));
 
-app.get('/test-endpoint', async (req, res) => {
-  // check that mlservice is reachable
+app.get('/cluster-data', async (req, res) => {
   try {
-    const ml_res = await axios.get('http://mlservice:4000');
+    const ml_res = await axios.get('http://mlservice:4000/cluster-data');
     res.send(ml_res.data);
   } catch (e) {
     res.send(e.message);
