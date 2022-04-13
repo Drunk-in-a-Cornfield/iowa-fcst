@@ -1,9 +1,10 @@
 from flask import Flask
 from os.path import exists
 import psycopg2
+import pandas as pd
 
-from features_by_store import create_feature_pickle
-from k_means import create_k_means_pickle
+from modules.features_by_store import create_feature_pickle
+from modules.k_means import create_k_means_pickle
 
 ########################
 ### Database Connection
@@ -26,6 +27,29 @@ def query(connection, query) :
     cursor.execute(query)
     return cursor.fetchall()
 
+##############################
+### Create / load pickle files
+##############################
+
+print('checking for features_by_store.pkl', flush=True)
+if not exists('./src/modules/features_by_store.pkl'):
+    print('did not detect ./src/modules/features_by_store.pkl; building now', flush=True)
+    create_feature_pickle()
+    print('done building ./src/modules/features_by_store.pkl', flush=True)
+else:
+    print('found existing feature_by_store.pkl', flush=True)
+
+print('checking for existing k_means.pkl')        
+if not exists('./src/modules/k_means.pkl'):
+    print('did not detect ./src/modules/k_means.pkl; building now', flush=True)
+    create_k_means_pickle()
+    print('done building ./src/modules/k_means.pkl', flush=True)
+else:
+    print('found existing k_means.pkl', flush=True)
+
+features_by_store_cached = pd.read_pickle('./src/modules/features_by_store.pkl')
+k_means_cached = pd.read_pickle('./src/modules/k_means.pkl')
+
 ##########
 ### Flask
 ##########
@@ -34,6 +58,10 @@ app = Flask(__name__)
 @app.route('/')
 def hello_geek():
     return '<h1>Hello from Flask & Docker 5</h2>'
+
+@app.route('/cluster-data')
+def cluster_data():
+    return 'some cluster data'
 
 @app.route('/sales_by_year')
 def sales_by_year():
@@ -90,20 +118,4 @@ def test():
     return send_file(img, mimetype='img/png')
 
 if __name__ == "__main__":
-    print('checking for features_by_store.pkl', flush=True)
-    if not exists('./features_by_store.pkl'):
-        print('did not detect ./features_by_store.pkl; building now', flush=True)
-        create_feature_pickle()
-        print('done building ./features_by_store.pkl', flush=True)
-    else:
-        print('found existing feature_by_store.pkl', flush=True)
-
-    print('checking for existing k_means.pkl')        
-    if not exists('./k_means.pkl'):
-        print('did not detect ./k_means.pkl; building now', flush=True)
-        create_k_means_pickle()
-        print('done building ./k_means.pkl', flush=True)
-    else:
-        print('found existing k_means.pkl', flush=True)
-    
     app.run(host='0.0.0.0', port=4000, debug=True)
