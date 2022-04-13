@@ -1,4 +1,3 @@
-from audioop import reverse
 from flask import Flask
 from os.path import exists
 import psycopg2
