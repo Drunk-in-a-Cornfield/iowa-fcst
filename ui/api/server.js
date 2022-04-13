@@ -25,7 +25,7 @@ app.get('/cluster-data', async (req, res) => {
         county_no: raw.county_no[key],
         pca_0: raw.pca_0[key],
         pca_1: raw.pca_1[key],
-        zip_cide: raw.zip_codes[key],
+        zip_code: raw.zip_codes[key],
         store_no: key,
         cluster: raw.cluster[key],
       });
