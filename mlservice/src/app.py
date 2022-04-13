@@ -1,3 +1,4 @@
+from audioop import reverse
 from flask import Flask
 from os.path import exists
 import psycopg2
@@ -5,6 +6,7 @@ import pandas as pd
 
 from modules.features_by_store import create_feature_pickle
 from modules.k_means import create_k_means_pickle
+from modules.ui_data import get_pca_coords, reverse_one_hot
 
 ########################
 ### Database Connection
@@ -61,7 +63,17 @@ def hello_geek():
 
 @app.route('/cluster-data')
 def cluster_data():
-    return 'some cluster data'
+    # reverse one hot encoding, preserving row order
+    df_k_means = reverse_one_hot(k_means_cached)
+    
+    # get pca-0 and pca-1 coordinates, preserving row order
+    df_pca_coords = get_pca_coords(features_by_store_cached)
+    
+    # join the two dataframes
+    df_pca_coords.index = df_k_means.index
+    df_all = df_k_means.join(df_pca_coords)
+    
+    return df_all.to_json()
 
 @app.route('/sales_by_year')
 def sales_by_year():
