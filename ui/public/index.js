@@ -106,8 +106,6 @@ d3.json('/cluster-data').then((records) => {
     .append('g')
     .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
 
-  console.log('svg:', svg);
-
   buildAxes({ svg, xScale, yScale });
   renderScatterplotPoints({ svg, records, xScale, yScale, colorScale });
 
