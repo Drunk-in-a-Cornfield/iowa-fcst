@@ -55,9 +55,11 @@ const renderScatterplotPoints = (props) => {
     .style('fill', (d) => colorScale(d.cluster));
 };
 
+const mainDiv = document.querySelector('#main');
+mainDiv.innerHTML = '<br /><br /><br />loading data..';
+
 // load the data and build scatter plot
 d3.json('/cluster-data').then((records) => {
-  const mainDiv = document.querySelector('#main');
   mainDiv.innerHTML = '';
   console.log('records:', records);
 
@@ -109,8 +111,17 @@ d3.json('/cluster-data').then((records) => {
   buildAxes({ svg, xScale, yScale });
   renderScatterplotPoints({ svg, records, xScale, yScale, colorScale });
 
-  const clearButton = document.querySelector('button#clear-svg');
-  clearButton.onclick = () => {
+  const zoomButtonDiv = document.createElement('div');
+  zoomButtonDiv.id = 'zoom-button-container';
+
+  const zoomButton = document.createElement('button');
+  zoomButton.id = 'zoom-button';
+  zoomButton.innerHTML = 'Zoom in';
+
+  zoomButtonDiv.appendChild(zoomButton);
+  document.body.appendChild(zoomButtonDiv);
+
+  zoomButton.onclick = () => {
     console.log('updating max pca_1');
 
     d3.select('#svg-a').remove();
