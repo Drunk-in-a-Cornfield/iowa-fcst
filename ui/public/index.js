@@ -104,14 +104,12 @@ d3.json('/cluster-data').then((records) => {
     .append('g')
     .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
 
-  console.log('svg:', svg);
-
   buildAxes({ svg, xScale, yScale });
   renderScatterplotPoints({ svg, records, xScale, yScale, colorScale });
 
   const clearButton = document.querySelector('button#clear-svg');
   clearButton.onclick = () => {
-    console.log('updating max pca_1');
+    console.log('updating max_pca_1');
 
     d3.select('#svg-a').remove();
 
