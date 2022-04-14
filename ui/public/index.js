@@ -55,10 +55,10 @@ const renderScatterplotPoints = (props) => {
     .style('fill', (d) => colorScale(d.cluster));
 };
 
-const mainDiv = document.querySelector('#main');
-
 // load the data and build scatter plot
 d3.json('/cluster-data').then((records) => {
+  const mainDiv = document.querySelector('#main');
+  mainDiv.innerHTML = '';
   console.log('records:', records);
 
   // find min/max x- and y- values
@@ -87,7 +87,7 @@ d3.json('/cluster-data').then((records) => {
     .domain([min_pca_0, max_pca_0])
     .range([MARGIN.left, WIDTH - MARGIN.right]);
 
-  const yScale = d3
+  let yScale = d3
     .scaleLinear()
     .domain([min_pca_1, max_pca_1])
     .range([HEIGHT, 0]);
@@ -95,7 +95,7 @@ d3.json('/cluster-data').then((records) => {
   const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
   // create the svg
-  const svg = d3
+  let svg = d3
     .select('div#main')
     .append('svg')
     .attr('width', WIDTH + MARGIN.left + MARGIN.right)
@@ -104,6 +104,32 @@ d3.json('/cluster-data').then((records) => {
     .append('g')
     .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
 
+  console.log('svg:', svg);
+
   buildAxes({ svg, xScale, yScale });
   renderScatterplotPoints({ svg, records, xScale, yScale, colorScale });
+
+  const clearButton = document.querySelector('button#clear-svg');
+  clearButton.onclick = () => {
+    console.log('updating max pca_1');
+
+    d3.select('#svg-a').remove();
+
+    svg = d3
+      .select('div#main')
+      .append('svg')
+      .attr('width', WIDTH + MARGIN.left + MARGIN.right)
+      .attr('height', HEIGHT + MARGIN.top + MARGIN.bottom)
+      .attr('id', 'svg-a')
+      .append('g')
+      .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
+
+    yScale = d3.scaleLinear().domain([min_pca_1, 20]).range([HEIGHT, 0]);
+    svg
+      .append('g')
+      .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
+
+    buildAxes({ svg, xScale, yScale });
+    renderScatterplotPoints({ svg, records, xScale, yScale, colorScale });
+  };
 });
