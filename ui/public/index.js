@@ -21,8 +21,11 @@ const renderAxes = (props) => {
     .append('text')
     .attr('class', 'x label')
     .attr('text-anchor', 'middle')
-    .attr('x', (WIDTH - MARGIN.left - MARGIN.right) / 2 + MARGIN.left)
-    .attr('y', HEIGHT + 40)
+    .attr(
+      'transform',
+      `translate(${(WIDTH - MARGIN.left - MARGIN.right) / 2 + MARGIN.left}, 40)`
+    )
+    .style('fill', 'black')
     .text('PCA-0');
 
   // create the y-axis
@@ -37,12 +40,19 @@ const renderAxes = (props) => {
     .append('text')
     .attr('class', 'y label')
     .attr('text-anchor', 'middle')
-    .attr('transform', `translate(-20,${HEIGHT / 2 + MARGIN.top}) rotate(-90)`)
+    .attr('transform', `translate(-40,${HEIGHT / 2}) rotate(-90)`)
+    .style('fill', 'black')
     .text('PCA-1');
 };
 
 const renderScatterplotPoints = (props) => {
   const { svg, records, xScale, yScale, colorScale } = props;
+
+  const tooltip = d3
+    .select('body')
+    .append('div')
+    .attr('class', 'tooltip')
+    .style('opacity', 0);
 
   svg
     .selectAll('.dot')
@@ -53,7 +63,31 @@ const renderScatterplotPoints = (props) => {
     .attr('r', 3.5)
     .attr('cx', (d) => xScale(d.pca_0))
     .attr('cy', (d) => yScale(d.pca_1))
-    .style('fill', (d) => colorScale(d.cluster));
+    .style('fill', (d) => colorScale(d.cluster))
+    .on('mouseover', (evt, d) => {
+      tooltip.transition().duration(200).style('opacity', 0.9);
+      tooltip
+        .html(
+          `
+          <u>Store #${d.store_no}</u>
+          <br />cluster_no: ${d.cluster}
+          <br />city: ${d.city.replace('city_', '')}
+          <br />zip_code: ${d.zip_code.replace('zip_code_', '')}
+          <br />county_no: ${d.county_no.replace('county_number_', '')}
+          <br /><br />average_monthly_bottles_sold: ${
+            d.average_monthly_bottles_sold
+          }
+          <br />average_monthly_profit: ${d.average_monthly_profit}
+          <br />average_monthly_sales: ${d.average_monthly_sales}
+          <br /><br />(pca_0, pca_1): (${d.pca_0}, ${d.pca_1})
+        `
+        )
+        .style('left', `${evt.pageX + 15}px`)
+        .style('top', `${evt.pageY + 5}px`);
+    })
+    .on('mouseout', (e) => {
+      tooltip.transition().duration(500).style('opacity', 0);
+    });
 };
 
 const renderChart = (props) => {
