@@ -2,10 +2,11 @@
 const MARGIN = { top: 20, right: 50, bottom: 40, left: 40 };
 const WIDTH = 960 - MARGIN.left - MARGIN.right;
 const HEIGHT = 500 - MARGIN.top - MARGIN.bottom;
+const LOADING_MESSAGE = '<br /><br /><br />loading data..';
 
 // helper functions
 
-const buildAxes = (props) => {
+const renderAxes = (props) => {
   const { svg, xScale, yScale } = props;
 
   // create the x-axis
@@ -58,9 +59,7 @@ const renderScatterplotPoints = (props) => {
 const renderChart = (props) => {
   const { records, min_pca_0, max_pca_0, min_pca_1, max_pca_1 } = props;
 
-  console.log('rendering new chart');
-
-  d3.select('#svg-a').remove();
+  mainDiv.innerHTML = '';
 
   // create the svg
   const svg = d3
@@ -86,12 +85,32 @@ const renderChart = (props) => {
   const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
   // render chart components
-  buildAxes({ svg, xScale, yScale });
+  renderAxes({ svg, xScale, yScale });
   renderScatterplotPoints({ svg, records, xScale, yScale, colorScale });
 };
 
+const renderZoomTools = (props) => {
+  const { records, min_pca_0, max_pca_0, min_pca_1, max_pca_1 } = props;
+
+  const zoomButtonDiv = document.createElement('div');
+  zoomButtonDiv.id = 'zoom-button-container';
+
+  const zoomButton = document.createElement('button');
+  zoomButton.id = 'zoom-button';
+  zoomButton.innerHTML = 'Zoom in';
+
+  zoomButtonDiv.appendChild(zoomButton);
+  document.body.appendChild(zoomButtonDiv);
+
+  zoomButton.onclick = () => {
+    d3.select('#svg-a').remove();
+    mainDiv.innerHTML = LOADING_MESSAGE;
+    renderChart({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1: 20 });
+  };
+};
+
 const mainDiv = document.querySelector('#main');
-mainDiv.innerHTML = '<br /><br /><br />loading data..';
+mainDiv.innerHTML = LOADING_MESSAGE;
 
 // load the data and build scatter plot
 d3.json('/cluster-data').then((records) => {
@@ -119,17 +138,5 @@ d3.json('/cluster-data').then((records) => {
   }
 
   renderChart({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1 });
-
-  const zoomButtonDiv = document.createElement('div');
-  zoomButtonDiv.id = 'zoom-button-container';
-
-  const zoomButton = document.createElement('button');
-  zoomButton.id = 'zoom-button';
-  zoomButton.innerHTML = 'Zoom in';
-
-  zoomButtonDiv.appendChild(zoomButton);
-  document.body.appendChild(zoomButtonDiv);
-
-  zoomButton.onclick = () =>
-    renderChart({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1: 20 });
+  renderZoomTools({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1: 20 });
 });
