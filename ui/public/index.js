@@ -21,8 +21,11 @@ const renderAxes = (props) => {
     .append('text')
     .attr('class', 'x label')
     .attr('text-anchor', 'middle')
-    .attr('x', (WIDTH - MARGIN.left - MARGIN.right) / 2 + MARGIN.left)
-    .attr('y', HEIGHT + 40)
+    .attr(
+      'transform',
+      `translate(${(WIDTH - MARGIN.left - MARGIN.right) / 2 + MARGIN.left}, 40)`
+    )
+    .style('fill', 'black')
     .text('PCA-0');
 
   // create the y-axis
@@ -37,7 +40,8 @@ const renderAxes = (props) => {
     .append('text')
     .attr('class', 'y label')
     .attr('text-anchor', 'middle')
-    .attr('transform', `translate(-20,${HEIGHT / 2 + MARGIN.top}) rotate(-90)`)
+    .attr('transform', `translate(-40,${HEIGHT / 2}) rotate(-90)`)
+    .style('fill', 'black')
     .text('PCA-1');
 };
 
