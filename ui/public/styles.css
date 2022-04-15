@@ -1,5 +1,12 @@
-#title {
+div#title {
+  font-family: 'Roboto', sans-serif;
+  font-size: x-large;
   font-weight: bold;
+  text-align: center;
+}
+
+div#subtitle {
+  font-family: 'Roboto', sans-serif;
   text-align: center;
 }
 
