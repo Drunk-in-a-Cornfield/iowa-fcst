@@ -55,6 +55,41 @@ const renderScatterplotPoints = (props) => {
     .style('fill', (d) => colorScale(d.cluster));
 };
 
+const renderChart = (props) => {
+  const { records, min_pca_0, max_pca_0, min_pca_1, max_pca_1 } = props;
+
+  console.log('rendering new chart');
+
+  d3.select('#svg-a').remove();
+
+  // create the svg
+  const svg = d3
+    .select('div#main')
+    .append('svg')
+    .attr('width', WIDTH + MARGIN.left + MARGIN.right)
+    .attr('height', HEIGHT + MARGIN.top + MARGIN.bottom)
+    .attr('id', 'svg-a')
+    .append('g')
+    .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
+
+  // scalers
+  const xScale = d3
+    .scaleLinear()
+    .domain([min_pca_0, max_pca_0])
+    .range([MARGIN.left, WIDTH - MARGIN.right]);
+
+  const yScale = d3
+    .scaleLinear()
+    .domain([min_pca_1, max_pca_1])
+    .range([HEIGHT, 0]);
+
+  const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+  // render chart components
+  buildAxes({ svg, xScale, yScale });
+  renderScatterplotPoints({ svg, records, xScale, yScale, colorScale });
+};
+
 const mainDiv = document.querySelector('#main');
 mainDiv.innerHTML = '<br /><br /><br />loading data..';
 
@@ -83,31 +118,7 @@ d3.json('/cluster-data').then((records) => {
       max_pca_1 = record.pca_1;
   }
 
-  // scalers
-  const xScale = d3
-    .scaleLinear()
-    .domain([min_pca_0, max_pca_0])
-    .range([MARGIN.left, WIDTH - MARGIN.right]);
-
-  let yScale = d3
-    .scaleLinear()
-    .domain([min_pca_1, max_pca_1])
-    .range([HEIGHT, 0]);
-
-  const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-
-  // create the svg
-  let svg = d3
-    .select('div#main')
-    .append('svg')
-    .attr('width', WIDTH + MARGIN.left + MARGIN.right)
-    .attr('height', HEIGHT + MARGIN.top + MARGIN.bottom)
-    .attr('id', 'svg-a')
-    .append('g')
-    .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
-
-  buildAxes({ svg, xScale, yScale });
-  renderScatterplotPoints({ svg, records, xScale, yScale, colorScale });
+  renderChart({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1 });
 
   const zoomButtonDiv = document.createElement('div');
   zoomButtonDiv.id = 'zoom-button-container';
@@ -119,26 +130,6 @@ d3.json('/cluster-data').then((records) => {
   zoomButtonDiv.appendChild(zoomButton);
   document.body.appendChild(zoomButtonDiv);
 
-  zoomButton.onclick = () => {
-    console.log('updating max pca_1');
-
-    d3.select('#svg-a').remove();
-
-    svg = d3
-      .select('div#main')
-      .append('svg')
-      .attr('width', WIDTH + MARGIN.left + MARGIN.right)
-      .attr('height', HEIGHT + MARGIN.top + MARGIN.bottom)
-      .attr('id', 'svg-a')
-      .append('g')
-      .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
-
-    yScale = d3.scaleLinear().domain([min_pca_1, 20]).range([HEIGHT, 0]);
-    svg
-      .append('g')
-      .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
-
-    buildAxes({ svg, xScale, yScale });
-    renderScatterplotPoints({ svg, records, xScale, yScale, colorScale });
-  };
+  zoomButton.onclick = () =>
+    renderChart({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1: 20 });
 });
