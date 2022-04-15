@@ -2,10 +2,11 @@
 const MARGIN = { top: 20, right: 50, bottom: 40, left: 40 };
 const WIDTH = 960 - MARGIN.left - MARGIN.right;
 const HEIGHT = 500 - MARGIN.top - MARGIN.bottom;
+const LOADING_MESSAGE = '<br /><br /><br />loading data..';
 
 // helper functions
 
-const buildAxes = (props) => {
+const renderAxes = (props) => {
   const { svg, xScale, yScale } = props;
 
   // create the x-axis
@@ -55,9 +56,78 @@ const renderScatterplotPoints = (props) => {
     .style('fill', (d) => colorScale(d.cluster));
 };
 
+const renderChart = (props) => {
+  const { records, min_pca_0, max_pca_0, min_pca_1, max_pca_1 } = props;
+
+  mainDiv.innerHTML = '';
+
+  // create the svg
+  const svg = d3
+    .select('div#main')
+    .append('svg')
+    .attr('width', WIDTH + MARGIN.left + MARGIN.right)
+    .attr('height', HEIGHT + MARGIN.top + MARGIN.bottom)
+    .attr('id', 'svg-a')
+    .append('g')
+    .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
+
+  // scalers
+  const xScale = d3
+    .scaleLinear()
+    .domain([min_pca_0, max_pca_0])
+    .range([MARGIN.left, WIDTH - MARGIN.right]);
+
+  const yScale = d3
+    .scaleLinear()
+    .domain([min_pca_1, max_pca_1])
+    .range([HEIGHT, 0]);
+
+  const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+  // render chart components
+  renderAxes({ svg, xScale, yScale });
+  renderScatterplotPoints({ svg, records, xScale, yScale, colorScale });
+};
+
+const renderZoomTools = (props) => {
+  const { records, min_pca_0, max_pca_0, min_pca_1, max_pca_1 } = props;
+
+  // create the container for the zoom tools
+  const zoomToolsDiv = document.createElement('div');
+  zoomToolsDiv.id = 'zoom-tools-container';
+
+  // create the "zoom in" button
+  const zoomButton = document.createElement('button');
+  zoomButton.id = 'zoom-button';
+  zoomButton.innerHTML = 'Zoom in';
+
+  zoomButton.onclick = () => {
+    d3.select('#svg-a').remove();
+    mainDiv.innerHTML = LOADING_MESSAGE;
+    renderChart({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1: 20 });
+  };
+
+  // create the "reset" button
+  const resetButton = document.createElement('button');
+  resetButton.id = 'reset-button';
+  resetButton.innerHTML = 'Reset zoom';
+  resetButton.onclick = () => {
+    d3.select('#svg-a').remove();
+    mainDiv.innerHTML = LOADING_MESSAGE;
+    renderChart({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1 });
+  };
+
+  // add the zoom tools to the DOM
+  zoomToolsDiv.appendChild(zoomButton);
+  zoomToolsDiv.appendChild(resetButton);
+  document.body.appendChild(zoomToolsDiv);
+};
+
+const mainDiv = document.querySelector('#main');
+mainDiv.innerHTML = LOADING_MESSAGE;
+
 // load the data and build scatter plot
 d3.json('/cluster-data').then((records) => {
-  const mainDiv = document.querySelector('#main');
   mainDiv.innerHTML = '';
   console.log('records:', records);
 
@@ -81,53 +151,6 @@ d3.json('/cluster-data').then((records) => {
       max_pca_1 = record.pca_1;
   }
 
-  // scalers
-  const xScale = d3
-    .scaleLinear()
-    .domain([min_pca_0, max_pca_0])
-    .range([MARGIN.left, WIDTH - MARGIN.right]);
-
-  let yScale = d3
-    .scaleLinear()
-    .domain([min_pca_1, max_pca_1])
-    .range([HEIGHT, 0]);
-
-  const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-
-  // create the svg
-  let svg = d3
-    .select('div#main')
-    .append('svg')
-    .attr('width', WIDTH + MARGIN.left + MARGIN.right)
-    .attr('height', HEIGHT + MARGIN.top + MARGIN.bottom)
-    .attr('id', 'svg-a')
-    .append('g')
-    .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
-
-  buildAxes({ svg, xScale, yScale });
-  renderScatterplotPoints({ svg, records, xScale, yScale, colorScale });
-
-  const clearButton = document.querySelector('button#clear-svg');
-  clearButton.onclick = () => {
-    console.log('updating max_pca_1');
-
-    d3.select('#svg-a').remove();
-
-    svg = d3
-      .select('div#main')
-      .append('svg')
-      .attr('width', WIDTH + MARGIN.left + MARGIN.right)
-      .attr('height', HEIGHT + MARGIN.top + MARGIN.bottom)
-      .attr('id', 'svg-a')
-      .append('g')
-      .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
-
-    yScale = d3.scaleLinear().domain([min_pca_1, 20]).range([HEIGHT, 0]);
-    svg
-      .append('g')
-      .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
-
-    buildAxes({ svg, xScale, yScale });
-    renderScatterplotPoints({ svg, records, xScale, yScale, colorScale });
-  };
+  renderChart({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1 });
+  renderZoomTools({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1 });
 });

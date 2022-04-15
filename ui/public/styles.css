@@ -1,9 +1,25 @@
-#title {
+button {
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+div#title {
+  font-family: 'Roboto', sans-serif;
+  font-size: x-large;
   font-weight: bold;
+  text-align: center;
+}
+
+div#subtitle {
+  font-family: 'Roboto', sans-serif;
   text-align: center;
 }
 
 div#main {
   height: 500;
+  text-align: center;
+}
+
+div#zoom-tools-container {
   text-align: center;
 }
