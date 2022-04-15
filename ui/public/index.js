@@ -92,21 +92,35 @@ const renderChart = (props) => {
 const renderZoomTools = (props) => {
   const { records, min_pca_0, max_pca_0, min_pca_1, max_pca_1 } = props;
 
-  const zoomButtonDiv = document.createElement('div');
-  zoomButtonDiv.id = 'zoom-button-container';
+  // create the container for the zoom tools
+  const zoomToolsDiv = document.createElement('div');
+  zoomToolsDiv.id = 'zoom-tools-container';
 
+  // create the "zoom in" button
   const zoomButton = document.createElement('button');
   zoomButton.id = 'zoom-button';
   zoomButton.innerHTML = 'Zoom in';
-
-  zoomButtonDiv.appendChild(zoomButton);
-  document.body.appendChild(zoomButtonDiv);
 
   zoomButton.onclick = () => {
     d3.select('#svg-a').remove();
     mainDiv.innerHTML = LOADING_MESSAGE;
     renderChart({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1: 20 });
   };
+
+  // create the "reset" button
+  const resetButton = document.createElement('button');
+  resetButton.id = 'reset-button';
+  resetButton.innerHTML = 'Reset zoom';
+  resetButton.onclick = () => {
+    d3.select('#svg-a').remove();
+    mainDiv.innerHTML = LOADING_MESSAGE;
+    renderChart({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1 });
+  };
+
+  // add the zoom tools to the DOM
+  zoomToolsDiv.appendChild(zoomButton);
+  zoomToolsDiv.appendChild(resetButton);
+  document.body.appendChild(zoomToolsDiv);
 };
 
 const mainDiv = document.querySelector('#main');
@@ -138,5 +152,5 @@ d3.json('/cluster-data').then((records) => {
   }
 
   renderChart({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1 });
-  renderZoomTools({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1: 20 });
+  renderZoomTools({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1 });
 });
