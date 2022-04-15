@@ -48,6 +48,12 @@ const renderAxes = (props) => {
 const renderScatterplotPoints = (props) => {
   const { svg, records, xScale, yScale, colorScale } = props;
 
+  const tooltip = d3
+    .select('body')
+    .append('div')
+    .attr('class', 'tooltip')
+    .style('opacity', 0);
+
   svg
     .selectAll('.dot')
     .data(records)
@@ -57,7 +63,31 @@ const renderScatterplotPoints = (props) => {
     .attr('r', 3.5)
     .attr('cx', (d) => xScale(d.pca_0))
     .attr('cy', (d) => yScale(d.pca_1))
-    .style('fill', (d) => colorScale(d.cluster));
+    .style('fill', (d) => colorScale(d.cluster))
+    .on('mouseover', (evt, d) => {
+      tooltip.transition().duration(200).style('opacity', 0.9);
+      tooltip
+        .html(
+          `
+          <u>Store #${d.store_no}</u>
+          <br />cluster_no: ${d.cluster}
+          <br />city: ${d.city.replace('city_', '')}
+          <br />zip_code: ${d.zip_code.replace('zip_code_', '')}
+          <br />county_no: ${d.county_no.replace('county_number_', '')}
+          <br /><br />average_monthly_bottles_sold: ${
+            d.average_monthly_bottles_sold
+          }
+          <br />average_monthly_profit: ${d.average_monthly_profit}
+          <br />average_monthly_sales: ${d.average_monthly_sales}
+          <br /><br />(pca_0, pca_1): (${d.pca_0}, ${d.pca_1})
+        `
+        )
+        .style('left', `${evt.pageX + 15}px`)
+        .style('top', `${evt.pageY + 5}px`);
+    })
+    .on('mouseout', (e) => {
+      tooltip.transition().duration(500).style('opacity', 0);
+    });
 };
 
 const renderChart = (props) => {

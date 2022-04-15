@@ -4,6 +4,17 @@ button {
   margin-right: 2px;
 }
 
+div.tooltip {
+  position: absolute;
+  padding: 2px;
+  font-family: 'Roboto', sans-serif;
+  font-size: small;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
 div#title {
   font-family: 'Roboto', sans-serif;
   font-size: x-large;
