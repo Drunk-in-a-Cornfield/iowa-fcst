@@ -49,7 +49,7 @@ const renderScatterplotPoints = (props) => {
   const { svg, records, xScale, yScale, colorScale } = props;
 
   const tooltip = d3
-    .select('body')
+    .select('div#main')
     .append('div')
     .attr('class', 'tooltip')
     .style('opacity', 0);
