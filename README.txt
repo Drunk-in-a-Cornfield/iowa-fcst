@@ -60,16 +60,17 @@ concurrently by multiple users, it could take some time for the server to
 catch up. In testing, the server appears to perform decently well with up to
 five concurrent users.
 
-Enter the root directory and run: docker-compose up
-
-- You may observe the docker logs to identify when the application is available
-- The initial build in Postgres can take some time depending on your CPU. It
-  loads our 3GB CSV file into Postgres and then reads/manipulates this data to
-  create a second, larger table which is used by our machine learning service.
-  - We saw the Postgres build take anywhere from 4 minutes up to 15 minutes
-- The mlservice waits until Postgres is available
-  - On first run it will take several minutes to build the Pickle files, again
-    dependent on CPU speed
-- The ui waits until mlservice is available
-  - Once it's ready, a Docker log will show that the ui is available
+- Enter the root directory and run: docker-compose up
+  - You may observe the docker logs to identify when the application is 
+    available
+  - The initial build in Postgres can take some time depending on your CPU. It
+    loads our 3GB CSV file into Postgres and then reads/manipulates this data
+    to create a second, larger table which is used by our machine learning 
+    service.
+    - We saw the Postgres build take anywhere from 4 minutes up to 15 minutes
+  - The mlservice waits until Postgres is available
+    - On first run it will take several minutes to build the Pickle files, again
+      dependent on CPU speed
+  - The ui waits until mlservice is available
+    - Once it's ready, a Docker log will show that the ui is available
 - Open your web browser and navigate to: http://localhost:3000
