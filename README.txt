@@ -17,8 +17,9 @@ directory corresponding to a discrete service:
 - mlservice
   - this is where the bulk of the clustering and forecasting work is done
   - contains a scripts directory which holds our forecasting scripts
-  - contains a modules directory which has Python modules we wrote for clustering
-    and manipulating the data such that we could visualize it with d3
+  - contains a modules directory which has Python modules we wrote for
+    clustering and manipulating the data such that we could visualize it with
+    d3
     - data is cached in Pickle files so that it does not need to be 
       recalculated each time the application is launched
   - contains a Flask server which makes the data available to the front end
@@ -42,13 +43,14 @@ be installed on the local machine are Docker and Docker Compose.
      - On EC2 with Ubuntu 20.04, all we needed was: 
        sudo apt install docker.io docker-compose
    - https://docs.docker.com/engine/install/linux-postinstall/
-     - Linux post-install steps make it so you don't need to use sudo with docker
-       commands
+     - Linux post-install steps make it so you don't need to use sudo with
+       docker commands
 2. Install Docker Compose
    - https://docs.docker.com/compose/install/
 3. Download the raw data from Kaggle
    - https://www.kaggle.com/datasets/residentmario/iowa-liquor-sales
-4. Extract the Kaggle data file to <project-root>/database/Iowa_Liquor_Sales.csv
+4. Extract the Kaggle data file to:
+   <project-root>/database/Iowa_Liquor_Sales.csv
 
 EXECUTION
 
@@ -69,8 +71,8 @@ five concurrent users.
     service
     - We saw the Postgres build take anywhere from 4 minutes up to 15 minutes
   - The mlservice waits until Postgres is available
-    - On first run it will take several minutes to build the Pickle files, again
-      dependent on CPU speed
+    - On first run it will take several minutes to build the Pickle files,
+      again dependent on CPU speed
   - The ui waits until mlservice is available
     - Once it's ready, a Docker log will show that the ui is available
 - Open your web browser and navigate to: http://localhost:3000
