@@ -34,14 +34,6 @@ https://github.com/Drunk-in-a-Cornfield/iowa-fcst
 
 INSTALLATION
 
-In case of any challenges with building our project locally, we have also
-hosted it on AWS at: http://team59.jhcao.net
-
-The application is running on a t2.medium EC2 instance. If it is accessed
-concurrently by multiple users, it could take some time for the server to
-catch up. In testing, the server appears to perform decently well with up to
-five concurrent users.
-
 All of our services are Dockerized. The only dependencies which are required to
 be installed on the local machine are Docker and Docker Compose.
 
@@ -59,6 +51,14 @@ be installed on the local machine are Docker and Docker Compose.
 4. Extract the Kaggle data file to <project-root>/database/Iowa_Liquor_Sales.csv
 
 EXECUTION
+
+In case of any challenges with building our project locally, we have also
+hosted it on AWS at: http://team59.jhcao.net
+
+The application is running on a t2.medium EC2 instance. If it is accessed
+concurrently by multiple users, it could take some time for the server to
+catch up. In testing, the server appears to perform decently well with up to
+five concurrent users.
 
 Enter the root directory and run: docker-compose up
 
