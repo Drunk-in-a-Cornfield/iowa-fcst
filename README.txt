@@ -74,3 +74,4 @@ five concurrent users.
   - The ui waits until mlservice is available
     - Once it's ready, a Docker log will show that the ui is available
 - Open your web browser and navigate to: http://localhost:3000
+  - Tested in Chrome and Firefox
