@@ -1,3 +1,7 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
 button {
   margin-top: 20px;
   margin-left: 2px;
@@ -7,23 +11,21 @@ button {
 div.tooltip {
   position: absolute;
   padding: 2px;
-  font-family: 'Roboto', sans-serif;
   font-size: small;
   background: lightsteelblue;
   border: 0px;
   border-radius: 8px;
   pointer-events: none;
+  text-align: left;
 }
 
 div#title {
-  font-family: 'Roboto', sans-serif;
   font-size: x-large;
   font-weight: bold;
   text-align: center;
 }
 
 div#subtitle {
-  font-family: 'Roboto', sans-serif;
   text-align: center;
 }
 
@@ -34,4 +36,13 @@ div#main {
 
 div#zoom-tools-container {
   text-align: center;
+}
+
+div#notes-container {
+  text-align: left;
+  width: 800px;
+  padding-top: 25px;
+  margin: auto;
+  font-size: small;
+  line-height: 1.6;
 }

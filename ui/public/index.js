@@ -49,7 +49,7 @@ const renderScatterplotPoints = (props) => {
   const { svg, records, xScale, yScale, colorScale } = props;
 
   const tooltip = d3
-    .select('body')
+    .select('div#main')
     .append('div')
     .attr('class', 'tooltip')
     .style('opacity', 0);
@@ -157,6 +157,19 @@ const renderZoomTools = (props) => {
   document.body.appendChild(zoomToolsDiv);
 };
 
+const renderUserNotes = () => {
+  const notesDiv = document.createElement('div');
+  notesDiv.id = 'notes-container';
+
+  notesDiv.innerHTML = `
+    <u>Usage Notes</u>
+    <br />- Mouseover the data points for more details.
+    <br />- The outlier causes the visualization to be difficult to read. Click on the "Zoom in" button to see a better view.
+  `;
+
+  document.body.appendChild(notesDiv);
+};
+
 const mainDiv = document.querySelector('#main');
 mainDiv.innerHTML = LOADING_MESSAGE;
 
@@ -187,4 +200,5 @@ d3.json('/cluster-data').then((records) => {
 
   renderChart({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1 });
   renderZoomTools({ records, min_pca_0, max_pca_0, min_pca_1, max_pca_1 });
+  renderUserNotes();
 });

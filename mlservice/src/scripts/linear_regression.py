@@ -3,6 +3,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 ############
 ### Summary
@@ -25,7 +26,7 @@ import pandas as pd
 ### Predict Sales
 ##################
 # Original
-df = pd.read_pickle('mlservice/k_means.pkl')
+df = pd.read_pickle('../modules/k_means.pkl')
 ignore_columns = [
     'average_monthly_sales',
     'average_monthly_profit'
@@ -44,7 +45,7 @@ pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
 print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
 
 # Cluster 0
-df = pd.read_pickle('mlservice/k_means.pkl')
+df = pd.read_pickle('../modules/k_means.pkl')
 df = df[df['cluster'] == 0]
 ignore_columns = [
     'average_monthly_sales',
@@ -65,7 +66,7 @@ pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
 print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
 
 # Cluster 1
-df = pd.read_pickle('mlservice/k_means.pkl')
+df = pd.read_pickle('../modules/k_means.pkl')
 df = df[df['cluster'] == 1]
 ignore_columns = [
     'average_monthly_sales',
@@ -86,7 +87,7 @@ pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
 print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
 
 # Cliuster 2
-df = pd.read_pickle('mlservice/k_means.pkl')
+df = pd.read_pickle('../modules/k_means.pkl')
 df = df[df['cluster'] == 2]
 ignore_columns = [
     'average_monthly_sales',
@@ -110,7 +111,7 @@ print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_p
 ### Predict Profit
 ###################
 # Original
-df = pd.read_pickle('mlservice/k_means.pkl')
+df = pd.read_pickle('../modules/k_means.pkl')
 ignore_columns = [
     'average_monthly_sales',
     'average_monthly_profit'
@@ -129,7 +130,7 @@ pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
 print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
 
 # Cluster 0
-df = pd.read_pickle('mlservice/k_means.pkl')
+df = pd.read_pickle('../modules/k_means.pkl')
 df = df[df['cluster'] == 0]
 ignore_columns = [
     'average_monthly_sales',
@@ -150,7 +151,7 @@ pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
 print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
 
 # Cluster 1
-df = pd.read_pickle('mlservice/k_means.pkl')
+df = pd.read_pickle('../modules/k_means.pkl')
 df = df[df['cluster'] == 1]
 ignore_columns = [
     'average_monthly_sales',
@@ -171,7 +172,7 @@ pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
 print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
 
 # Cluster 2
-df = pd.read_pickle('mlservice/k_means.pkl')
+df = pd.read_pickle('../modules/k_means.pkl')
 df = df[df['cluster'] == 2]
 ignore_columns = [
     'average_monthly_sales',
