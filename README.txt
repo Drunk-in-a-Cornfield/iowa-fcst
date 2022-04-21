@@ -66,7 +66,7 @@ five concurrent users.
   - The initial build in Postgres can take some time depending on your CPU. It
     loads our 3GB CSV file into Postgres and then reads/manipulates this data
     to create a second, larger table which is used by our machine learning 
-    service.
+    service
     - We saw the Postgres build take anywhere from 4 minutes up to 15 minutes
   - The mlservice waits until Postgres is available
     - On first run it will take several minutes to build the Pickle files, again
