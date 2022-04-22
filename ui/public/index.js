@@ -1,7 +1,3 @@
-// set up the margins
-const MARGIN = { top: 20, right: 50, bottom: 40, left: 40 };
-const WIDTH = 960 - MARGIN.left - MARGIN.right;
-const HEIGHT = 500 - MARGIN.top - MARGIN.bottom;
 const LOADING_MESSAGE = '<br /><br /><br />loading data..';
 
 const useScatterPlot = () => {
@@ -172,6 +168,11 @@ const useScatterPlot = () => {
 
     mainDiv.appendChild(notesDiv);
   };
+
+  // set up the margins
+  const MARGIN = { top: 20, right: 50, bottom: 40, left: 40 };
+  const WIDTH = 960 - MARGIN.left - MARGIN.right;
+  const HEIGHT = 500 - MARGIN.top - MARGIN.bottom;
 
   mainDiv.innerHTML = '';
   const scatterplotDiv = document.createElement('div');
