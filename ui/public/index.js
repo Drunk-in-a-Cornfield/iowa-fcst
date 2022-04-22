@@ -210,6 +210,10 @@ const useScatterPlot = () => {
   });
 };
 
+const useForecast = () => {
+  mainDiv.innerHTML = '<br /><br /><br />forecast data to be inserted here';
+};
+
 const mainDiv = document.querySelector('div#main');
 
 const chartswitcherDiv = document.querySelector('div#chartswitcher');
@@ -222,9 +226,10 @@ scatterplotButton.onclick = useScatterPlot;
 const forecastButton = document.createElement('button');
 forecastButton.id = 'btn-forecast';
 forecastButton.innerHTML = 'Use Forecast Chart';
-forecastButton.onclick = () => {
-  mainDiv.innerHTML = '<br /><br /><br />forecast data to be inserted here';
-};
+forecastButton.onclick = useForecast;
 
 chartswitcherDiv.appendChild(scatterplotButton);
 chartswitcherDiv.appendChild(forecastButton);
+
+// default to scatter plot
+useScatterPlot();
