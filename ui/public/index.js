@@ -220,12 +220,12 @@ const chartswitcherDiv = document.querySelector('div#chartswitcher');
 
 const scatterplotButton = document.createElement('button');
 scatterplotButton.id = 'btn-scatterplot';
-scatterplotButton.innerHTML = 'Use Scatterplot';
+scatterplotButton.innerHTML = 'Load Scatterplot';
 scatterplotButton.onclick = useScatterPlot;
 
 const forecastButton = document.createElement('button');
 forecastButton.id = 'btn-forecast';
-forecastButton.innerHTML = 'Use Forecast Chart';
+forecastButton.innerHTML = 'Load Forecast Chart';
 forecastButton.onclick = useForecast;
 
 chartswitcherDiv.appendChild(scatterplotButton);
