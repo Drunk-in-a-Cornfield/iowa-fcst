@@ -468,6 +468,5 @@ chartswitcherDiv.appendChild(scatterplotButton);
 chartswitcherDiv.appendChild(forecastButton);
 
 // default to scatter plot
-// useScatterPlot();
-
-useForecast();
+useScatterPlot();
+// useForecast();
