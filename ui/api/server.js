@@ -47,10 +47,13 @@ app.get('/forecast', async (req, res) => {
     const ml_res = await axios.get('http://mlservice:4000/forecast');
     res.send({
       db: db_res,
-      mlservice: ml_res.data.map((d, i) => ({
-        date: new Date(new Date(today).setDate(today.getDate() + i)),
-        value: d,
-      })),
+      mlservice: ml_res.data.map((d, i) => {
+        const date = new Date(new Date(today).setDate(today.getDate() + i));
+        return {
+          date: `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`,
+          value: d,
+        };
+      }),
     });
   } catch (e) {
     console.log(e.message);
