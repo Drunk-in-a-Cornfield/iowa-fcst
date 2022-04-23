@@ -41,11 +41,12 @@ app.get('/cluster-data', async (req, res) => {
 
 app.get('/forecast', async (req, res) => {
   try {
+    const county_string = req.query.county_string;
     const [db_res, ml_res] = await Promise.all([
-      getLastYearActuals('POLK'),
+      getLastYearActuals(county_string),
       axios.get('http://mlservice:4000/forecast', {
         params: {
-          county_string: 'POLK',
+          county_string: county_string,
           date_zero: new Date('10/31/2017').toUTCString(),
         },
       }),

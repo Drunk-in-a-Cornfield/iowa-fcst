@@ -250,7 +250,7 @@ const useForecast = () => {
       .attr('text-anchor', 'middle')
       .attr('transform', `translate(-60,${HEIGHT / 2}) rotate(-90)`)
       .style('fill', 'black')
-      .text('Forecasted Liquor Sales ($)');
+      .text('Liquor Sales ($)');
   };
 
   const renderLinechartPoints = (props) => {
@@ -409,7 +409,7 @@ const useForecast = () => {
 
   linechartDiv.innerHTML = LOADING_MESSAGE;
 
-  d3.json('/forecast').then((data) => {
+  d3.json('/forecast?county_string=POLK').then((data) => {
     console.log('data:', data);
 
     linechartDiv.innerHTML = '';
