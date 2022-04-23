@@ -41,7 +41,6 @@ app.get('/forecast', async (req, res) => {
   try {
     const { getData } = require('./dbClient');
     const db_res = await getData('POLK');
-    console.log('db_res:', db_res);
 
     const today = new Date();
     const ml_res = await axios.get('http://mlservice:4000/forecast');
