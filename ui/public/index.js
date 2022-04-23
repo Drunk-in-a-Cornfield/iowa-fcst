@@ -211,8 +211,6 @@ const useScatterPlot = () => {
 };
 
 const useForecast = () => {
-  const parseTime = d3.timeParse('%Y-%m-%d');
-
   const renderAxes = (props) => {
     const { svg, xScale, yScale } = props;
 
@@ -259,6 +257,12 @@ const useForecast = () => {
     const { svg, actual_records, fcst_records, xScale, yScale, colorScale } =
       props;
 
+    const tooltip = d3
+      .select('div#linechart-container')
+      .append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 0);
+
     svg
       .selectAll('.dot-act')
       .data(actual_records)
@@ -268,7 +272,26 @@ const useForecast = () => {
       .attr('r', 3.5)
       .attr('cx', (d) => xScale(new Date(d.date)))
       .attr('cy', (d) => yScale(d.value))
-      .style('fill', 'black');
+      .style('fill', 'black')
+      .on('mouseover', (evt, d) => {
+        tooltip.transition().duration(200).style('opacity', 0.9);
+        tooltip
+          .html(
+            `
+            Date: ${new Date(d.date).toLocaleString('en-US', {
+              year: '2-digit',
+              month: '2-digit',
+              day: '2-digit',
+            })}
+            <br />Sales: $${d.value}
+          `
+          )
+          .style('left', `${evt.pageX + 15}px`)
+          .style('top', `${evt.pageY + 5}px`);
+      })
+      .on('mouseout', (e) => {
+        tooltip.transition().duration(500).style('opacity', 0);
+      });
 
     svg
       .append('path')
@@ -285,8 +308,6 @@ const useForecast = () => {
           .y((d) => yScale(d.value))
       );
 
-    console.log('fcst_records:', fcst_records);
-
     svg
       .selectAll('.dot-fcst-dl')
       .data(fcst_records)
@@ -294,14 +315,28 @@ const useForecast = () => {
       .append('circle')
       .attr('class', 'dot-fcst-dl')
       .attr('r', 3.5)
-      .attr('cx', function (d) {
-        console.log('d:', d);
-        return xScale(new Date(d.date));
+      .attr('cx', (d) => xScale(new Date(d.date)))
+      .attr('cy', (d) => yScale(d.value))
+      .style('fill', 'steelblue')
+      .on('mouseover', (evt, d) => {
+        tooltip.transition().duration(200).style('opacity', 0.9);
+        tooltip
+          .html(
+            `
+            Date: ${new Date(d.date).toLocaleString('en-US', {
+              year: '2-digit',
+              month: '2-digit',
+              day: '2-digit',
+            })}
+            <br />Forecasted Sales: $${d.value}
+          `
+          )
+          .style('left', `${evt.pageX + 15}px`)
+          .style('top', `${evt.pageY + 5}px`);
       })
-      .attr('cy', function (d) {
-        return yScale(d.value);
-      })
-      .style('fill', 'steelblue');
+      .on('mouseout', (e) => {
+        tooltip.transition().duration(500).style('opacity', 0);
+      });
 
     svg
       .append('path')
