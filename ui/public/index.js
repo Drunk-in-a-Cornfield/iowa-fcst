@@ -469,3 +469,5 @@ chartswitcherDiv.appendChild(scatterplotButton);
 
 // default to forecast chart
 useForecast();
+
+console.log('counties:', counties);
