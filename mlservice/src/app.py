@@ -80,7 +80,7 @@ def cluster_data():
 
 @app.route('/forecast')
 def forecast():
-    fcst_result = serve_model("POLK", datetime.datetime.now() - datetime.timedelta(days=5), 10, load_model())
+    fcst_result = serve_model("POLK", datetime.datetime.now(), 10, load_model())
     return json.dumps([f.astype(float) for f in fcst_result])
 
 @app.route('/sales_by_year')
