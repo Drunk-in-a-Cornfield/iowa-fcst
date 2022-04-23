@@ -18,8 +18,8 @@ const getLastYearActuals = async (county_name) => {
     .limit(1);
 
   const latest_actual_date = latest_actual_date_result[0].Date;
-  const year_ago_date = new Date(
-    new Date(latest_actual_date).setDate(latest_actual_date.getDate() - 365)
+  const start_date = new Date(
+    new Date(latest_actual_date).setDate(latest_actual_date.getDate() - 30)
   );
 
   const results = await client
@@ -29,14 +29,17 @@ const getLastYearActuals = async (county_name) => {
     .where({
       county__c: county_name.toUpperCase(),
     })
-    .andWhere('date__c', '>=', year_ago_date)
+    .andWhere('date__c', '>=', start_date)
     .groupBy('county__c', 'date__c')
     .orderBy('date__c', 'asc');
 
-  return results.map((r) => ({
-    date: `${r.date__c.getFullYear()}-${r.date__c.getMonth()+1}-${r.date__c.getDate()}`,
-    value: parseInt(r.sum),
-  }));
+  return results.map((r) => {
+    const date = new Date(r.date__c);
+    return {
+      date: date.getTime(),
+      value: parseInt(r.sum),
+    };
+  });
 };
 
 module.exports = {

@@ -57,10 +57,8 @@ app.get('/forecast', async (req, res) => {
       mlservice: ml_res.data.map((d, i) => {
         const date = new Date(new Date(today).setDate(today.getDate() + i));
         return {
-          date: `${date.getFullYear()}-${
-            date.getMonth() + 1
-          }-${date.getDate()}`,
-          value: d,
+          date: date.getTime(),
+          value: parseInt(d),
         };
       }),
     });
