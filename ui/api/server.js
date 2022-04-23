@@ -46,12 +46,12 @@ app.get('/forecast', async (req, res) => {
       axios.get('http://mlservice:4000/forecast', {
         params: {
           county_string: 'POLK',
-          date_zero: new Date('10/31/2017'),
+          date_zero: new Date('10/31/2017').toUTCString(),
         },
       }),
     ]);
 
-    const today = new Date();
+    const today = new Date('10/31/2017');
     res.send({
       db: db_res,
       mlservice: ml_res.data.map((d, i) => {
