@@ -6,7 +6,7 @@ counties = ['ADAIR', 'ADAMS', 'ALLAMAKEE', 'APPANOOSE', 'AUDUBON', 'BENTON', 'BL
 counties_encoding = {county: num for num, county in enumerate(counties) }
 
 def load_model():
-	return keras.models.load_model("deep_learning_rnn_model")
+	return keras.models.load_model('./src/modules/deep_learning_rnn_model')
 
 def serve_model(county_string, date_zero, day_count, model):
 	time_steps = 6

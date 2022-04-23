@@ -8,6 +8,11 @@ button {
   margin-right: 2px;
 }
 
+ul {
+  padding-left: 10px;
+  margin-top: 0px;
+}
+
 div.tooltip {
   position: absolute;
   padding: 2px;
@@ -26,6 +31,10 @@ div#title {
 }
 
 div#subtitle {
+  text-align: center;
+}
+
+div#chartswitcher {
   text-align: center;
 }
 
