@@ -1,3 +1,7 @@
+// set up the margins
+const MARGIN = { top: 20, right: 50, bottom: 40, left: 40 };
+const WIDTH = 960 - MARGIN.left - MARGIN.right;
+const HEIGHT = 500 - MARGIN.top - MARGIN.bottom;
 const LOADING_MESSAGE = '<br /><br /><br />loading data..';
 
 const useScatterPlot = () => {
@@ -169,11 +173,6 @@ const useScatterPlot = () => {
     mainDiv.appendChild(notesDiv);
   };
 
-  // set up the margins
-  const MARGIN = { top: 20, right: 50, bottom: 40, left: 40 };
-  const WIDTH = 960 - MARGIN.left - MARGIN.right;
-  const HEIGHT = 500 - MARGIN.top - MARGIN.bottom;
-
   mainDiv.innerHTML = '';
   const scatterplotDiv = document.createElement('div');
   scatterplotDiv.id = 'scatterplot-container';
@@ -212,7 +211,104 @@ const useScatterPlot = () => {
 };
 
 const useForecast = () => {
-  mainDiv.innerHTML = '<br /><br /><br />forecast data to be inserted here';
+  const parseTime = d3.timeParse('%Y-%m-%d');
+
+  const renderAxes = (props) => {
+    const { svg, xScale, yScale } = props;
+
+    // create the x-axis
+    const xAxisGroup = svg.append('g').attr('id', 'x-axis');
+    const formatAxisLabel = d3.timeFormat('%m/%d/%y');
+
+    xAxisGroup
+      .attr('class', 'x axis')
+      .attr('transform', `translate(0,${HEIGHT})`)
+      .call(d3.axisBottom(xScale).tickFormat(formatAxisLabel));
+
+    xAxisGroup
+      .append('text')
+      .attr('class', 'x label')
+      .attr('text-anchor', 'middle')
+      .attr(
+        'transform',
+        `translate(${
+          (WIDTH - MARGIN.left - MARGIN.right) / 2 + MARGIN.left
+        }, 40)`
+      )
+      .style('fill', 'black')
+      .text('Date');
+
+    // create the y-axis
+    const yAxisGroup = svg.append('g').attr('id', 'y-axis');
+
+    yAxisGroup
+      .attr('class', 'y axis')
+      .attr('transform', `translate(${MARGIN.left},0)`)
+      .call(d3.axisLeft(yScale));
+
+    yAxisGroup
+      .append('text')
+      .attr('class', 'y label')
+      .attr('text-anchor', 'middle')
+      .attr('transform', `translate(-60,${HEIGHT / 2}) rotate(-90)`)
+      .style('fill', 'black')
+      .text('Forecasted Liquor Sales ($)');
+  };
+
+  const renderChart = (props) => {
+    const { records, min_date, max_date, min_fcst, max_fcst } = props;
+
+    linechartDiv.innerHTML = '';
+
+    // create the svg
+    const svg = d3
+      .select('div#linechart-container')
+      .append('svg')
+      .attr('width', WIDTH + MARGIN.left + MARGIN.right)
+      .attr('height', HEIGHT + MARGIN.top + MARGIN.bottom)
+      .attr('id', 'svg-b')
+      .append('g')
+      .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
+
+    // scalers
+    const xScale = d3
+      .scaleTime()
+      .domain([min_date, max_date])
+      .range([MARGIN.left, WIDTH - MARGIN.right]);
+
+    const yScale = d3
+      .scaleLinear()
+      .domain([min_fcst, max_fcst])
+      .range([HEIGHT, 0]);
+
+    const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+    // render chart components
+    renderAxes({ svg, xScale, yScale });
+  };
+
+  mainDiv.innerHTML = '';
+
+  const linechartDiv = document.createElement('div');
+  linechartDiv.id = 'linechart-container';
+  mainDiv.appendChild(linechartDiv);
+
+  linechartDiv.innerHTML = LOADING_MESSAGE;
+
+  d3.json('/forecast').then((data) => {
+    console.log('data:', data);
+
+    linechartDiv.innerHTML = '';
+
+    const records = data.mlservice;
+
+    const min_date = parseTime(d3.min(records, (d) => d.date));
+    const max_date = parseTime(d3.max(records, (d) => d.date));
+    const min_fcst = d3.min(records, (d) => d.value);
+    const max_fcst = d3.max(records, (d) => d.value);
+
+    renderChart({ records, min_date, max_date, min_fcst, max_fcst });
+  });
 };
 
 const mainDiv = document.querySelector('div#main');
@@ -233,4 +329,6 @@ chartswitcherDiv.appendChild(scatterplotButton);
 chartswitcherDiv.appendChild(forecastButton);
 
 // default to scatter plot
-useScatterPlot();
+// useScatterPlot();
+
+useForecast();
