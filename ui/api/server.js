@@ -40,7 +40,7 @@ app.get('/cluster-data', async (req, res) => {
 app.get('/forecast', async (req, res) => {
   try {
     const { getData } = require('./dbClient');
-    const db_res = await getData();
+    const db_res = await getData('POLK');
     console.log('db_res:', db_res);
 
     const today = new Date();
