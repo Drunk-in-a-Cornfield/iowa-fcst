@@ -83,7 +83,7 @@ def forecast():
     county_string = request.args.get('county_string')
     date_zero = request.args.get('date_zero')
 
-    fcst_result = serve_model(county_string, datetime.datetime.strptime(date_zero, "%a, %d %b %Y %H:%M:%S %Z"), 30, load_model())
+    fcst_result = serve_model(county_string, datetime.datetime.strptime(date_zero, "%a, %d %b %Y %H:%M:%S %Z"), 10, load_model())
     return json.dumps([f.astype(float) for f in fcst_result])
 
 @app.route('/sales_by_year')
