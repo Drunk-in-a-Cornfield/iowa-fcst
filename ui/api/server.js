@@ -37,5 +37,26 @@ app.get('/cluster-data', async (req, res) => {
   }
 });
 
+app.get('/forecast', async (req, res) => {
+  try {
+    const { getData } = require('./dbClient');
+    const db_res = await getData();
+    console.log('db_res:', db_res);
+
+    const today = new Date();
+    const ml_res = await axios.get('http://mlservice:4000/forecast');
+    res.send({
+      db: db_res,
+      mlservice: ml_res.data.map((d, i) => ({
+        date: new Date(new Date(today).setDate(today.getDate() + i)),
+        value: d,
+      })),
+    });
+  } catch (e) {
+    console.log(e.message);
+    res.send(e.message);
+  }
+});
+
 app.listen(PORT, HOST);
 console.log(`Running UI server on http://${HOST}:${PORT}`);
