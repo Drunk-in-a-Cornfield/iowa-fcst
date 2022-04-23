@@ -83,8 +83,11 @@ def forecast():
     county_string = request.args.get('county_string')
     date_zero = request.args.get('date_zero')
 
-    fcst_result = serve_model(county_string, datetime.datetime.strptime(date_zero, "%a, %d %b %Y %H:%M:%S %Z"), 10, load_model())
-    return json.dumps([f.astype(float) for f in fcst_result])
+    deep_learning_result = serve_model(county_string, datetime.datetime.strptime(date_zero, "%a, %d %b %Y %H:%M:%S %Z"), 10, load_model())
+
+    return json.dumps({
+        'deep_learning_fcst':[f.astype(float) for f in deep_learning_result]
+    })
 
 @app.route('/sales_by_year')
 def sales_by_year():

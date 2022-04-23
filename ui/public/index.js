@@ -415,7 +415,7 @@ const useForecast = () => {
     linechartDiv.innerHTML = '';
 
     const actual_records = data.db;
-    const fcst_records = data.mlservice;
+    const fcst_records = data.mlservice.deep_learning_fcst;
 
     const min_date = new Date(
       Math.min(

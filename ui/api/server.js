@@ -43,7 +43,7 @@ app.get('/forecast', async (req, res) => {
   try {
     const county_string = req.query.county_string;
     const latest_actual_date = await getLastDateOfActual(county_string);
-    
+
     const [db_res, ml_res] = await Promise.all([
       getLastYearActuals(county_string, latest_actual_date),
       axios.get('http://mlservice:4000/forecast', {
@@ -54,16 +54,21 @@ app.get('/forecast', async (req, res) => {
       }),
     ]);
 
-    const today = new Date(latest_actual_date);
+    const last_actual = new Date(latest_actual_date);
+
     res.send({
       db: db_res,
-      mlservice: ml_res.data.map((d, i) => {
-        const date = new Date(new Date(today).setDate(today.getDate() + i));
-        return {
-          date: date.getTime(),
-          value: parseInt(d),
-        };
-      }),
+      mlservice: {
+        deep_learning_fcst: ml_res.data.deep_learning_fcst.map((d, i) => {
+          const date = new Date(
+            new Date(last_actual).setDate(last_actual.getDate() + i)
+          );
+          return {
+            date: date.getTime(),
+            value: parseInt(d),
+          };
+        }),
+      },
     });
   } catch (e) {
     console.log(e.message);
