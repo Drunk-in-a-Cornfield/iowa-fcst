@@ -68,6 +68,17 @@ app.get('/forecast', async (req, res) => {
             value: parseInt(d),
           };
         }),
+        dummy_fcst: (() => {
+          return ml_res.data.deep_learning_fcst.map((d, i) => {
+            const date = new Date(
+              new Date(last_actual).setDate(last_actual.getDate() + i)
+            );
+            return {
+              date: date.getTime(),
+              value: parseInt(d) * 1.25,
+            };
+          });
+        })(),
       },
     });
   } catch (e) {
