@@ -41,16 +41,25 @@ app.get('/cluster-data', async (req, res) => {
 
 app.get('/forecast', async (req, res) => {
   try {
-    const db_res = await getLastYearActuals('POLK');
+    const [db_res, ml_res] = await Promise.all([
+      getLastYearActuals('POLK'),
+      axios.get('http://mlservice:4000/forecast', {
+        params: {
+          county_string: 'POLK',
+          date_zero: new Date('10/31/2017'),
+        },
+      }),
+    ]);
 
     const today = new Date();
-    const ml_res = await axios.get('http://mlservice:4000/forecast');
     res.send({
       db: db_res,
       mlservice: ml_res.data.map((d, i) => {
         const date = new Date(new Date(today).setDate(today.getDate() + i));
         return {
-          date: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
+          date: `${date.getFullYear()}-${
+            date.getMonth() + 1
+          }-${date.getDate()}`,
           value: d,
         };
       }),
