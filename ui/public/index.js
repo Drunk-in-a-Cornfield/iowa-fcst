@@ -256,7 +256,33 @@ const useForecast = () => {
   };
 
   const renderLinechartPoints = (props) => {
-    const { svg, fcst_records, xScale, yScale, colorScale } = props;
+    const { svg, actual_records, fcst_records, xScale, yScale, colorScale } =
+      props;
+
+    svg
+      .selectAll('.dot')
+      .data(actual_records)
+      .enter()
+      .append('circle')
+      .attr('class', 'dot')
+      .attr('r', 3.5)
+      .attr('cx', (d) => xScale(new Date(d.date)))
+      .attr('cy', (d) => yScale(d.value))
+      .style('fill', 'steelblue');
+
+    svg
+      .append('path')
+      .datum(actual_records)
+      .attr('fill', 'none')
+      .attr('stroke', 'steelblue')
+      .attr('stroke-width', 1.5)
+      .attr(
+        'd',
+        d3
+          .line()
+          .x((d) => xScale(new Date(d.date)))
+          .y((d) => yScale(d.value))
+      );
 
     svg
       .selectAll('.dot')
@@ -285,7 +311,14 @@ const useForecast = () => {
   };
 
   const renderChart = (props) => {
-    const { fcst_records, min_date, max_date, min_sales, max_sales } = props;
+    const {
+      actual_records,
+      fcst_records,
+      min_date,
+      max_date,
+      min_sales,
+      max_sales,
+    } = props;
 
     linechartDiv.innerHTML = '';
 
@@ -314,7 +347,14 @@ const useForecast = () => {
 
     // render chart components
     renderAxes({ svg, xScale, yScale });
-    renderLinechartPoints({ svg, fcst_records, xScale, yScale, colorScale });
+    renderLinechartPoints({
+      svg,
+      actual_records,
+      fcst_records,
+      xScale,
+      yScale,
+      colorScale,
+    });
   };
 
   mainDiv.innerHTML = '';
@@ -333,14 +373,18 @@ const useForecast = () => {
     const actual_records = data.db;
     const fcst_records = data.mlservice;
 
-    const min_date = new Date(Math.min(
-      parseTime(d3.min(actual_records, (d) => d.date)),
-      parseTime(d3.min(fcst_records, (d) => d.date))
-    ));
-    const max_date = new Date(Math.max(
-      parseTime(d3.max(actual_records, (d) => d.date)),
-      parseTime(d3.max(fcst_records, (d) => d.date))
-    ));
+    const min_date = new Date(
+      Math.min(
+        parseTime(d3.min(actual_records, (d) => d.date)),
+        parseTime(d3.min(fcst_records, (d) => d.date))
+      )
+    );
+    const max_date = new Date(
+      Math.max(
+        parseTime(d3.max(actual_records, (d) => d.date)),
+        parseTime(d3.max(fcst_records, (d) => d.date))
+      )
+    );
 
     const min_sales = Math.min(
       d3.min(actual_records, (d) => d.value),
@@ -351,7 +395,14 @@ const useForecast = () => {
       d3.max(fcst_records, (d) => d.value)
     );
 
-    renderChart({ fcst_records, min_date, max_date, min_sales, max_sales });
+    renderChart({
+      actual_records,
+      fcst_records,
+      min_date,
+      max_date,
+      min_sales,
+      max_sales,
+    });
   });
 };
 
