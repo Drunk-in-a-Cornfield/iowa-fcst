@@ -260,22 +260,23 @@ const useForecast = () => {
       props;
 
     svg
-      .selectAll('.dot')
+      .selectAll('.dot-act')
       .data(actual_records)
       .enter()
       .append('circle')
-      .attr('class', 'dot')
+      .attr('class', 'dot-act')
       .attr('r', 3.5)
       .attr('cx', (d) => xScale(new Date(d.date)))
       .attr('cy', (d) => yScale(d.value))
-      .style('fill', 'steelblue');
+      .style('fill', 'black');
 
     svg
       .append('path')
       .datum(actual_records)
       .attr('fill', 'none')
-      .attr('stroke', 'steelblue')
+      .attr('stroke', 'black')
       .attr('stroke-width', 1.5)
+      .attr('class', 'line-act')
       .attr(
         'd',
         d3
@@ -284,15 +285,22 @@ const useForecast = () => {
           .y((d) => yScale(d.value))
       );
 
+    console.log('fcst_records:', fcst_records);
+
     svg
-      .selectAll('.dot')
+      .selectAll('.dot-fcst-dl')
       .data(fcst_records)
       .enter()
       .append('circle')
-      .attr('class', 'dot')
+      .attr('class', 'dot-fcst-dl')
       .attr('r', 3.5)
-      .attr('cx', (d) => xScale(new Date(d.date)))
-      .attr('cy', (d) => yScale(d.value))
+      .attr('cx', function (d) {
+        console.log('d:', d);
+        return xScale(new Date(d.date));
+      })
+      .attr('cy', function (d) {
+        return yScale(d.value);
+      })
       .style('fill', 'steelblue');
 
     svg
@@ -301,6 +309,7 @@ const useForecast = () => {
       .attr('fill', 'none')
       .attr('stroke', 'steelblue')
       .attr('stroke-width', 1.5)
+      .attr('class', 'line-fcst-dl')
       .attr(
         'd',
         d3
@@ -375,14 +384,14 @@ const useForecast = () => {
 
     const min_date = new Date(
       Math.min(
-        parseTime(d3.min(actual_records, (d) => d.date)),
-        parseTime(d3.min(fcst_records, (d) => d.date))
+        d3.min(actual_records, (d) => d.date),
+        d3.min(fcst_records, (d) => d.date)
       )
     );
     const max_date = new Date(
       Math.max(
-        parseTime(d3.max(actual_records, (d) => d.date)),
-        parseTime(d3.max(fcst_records, (d) => d.date))
+        d3.max(actual_records, (d) => d.date),
+        d3.max(fcst_records, (d) => d.date)
       )
     );
 
