@@ -9,15 +9,20 @@ const client = require('knex')({
   },
 });
 
-const getLastYearActuals = async (county_name) => {
+const getLastDateOfActual = async (county_string) => {
   const latest_actual_date_result = await client
     .distinct('Date')
     .from('salesdata2')
-    .where({ county__c: county_name.toUpperCase() })
+    .where({ county__c: county_string.toUpperCase() })
     .orderBy('Date', 'desc')
     .limit(1);
 
   const latest_actual_date = latest_actual_date_result[0].Date;
+
+  return latest_actual_date;
+};
+
+const getLastYearActuals = async (county_string, latest_actual_date) => {
   const start_date = new Date(
     new Date(latest_actual_date).setDate(latest_actual_date.getDate() - 30)
   );
@@ -27,7 +32,7 @@ const getLastYearActuals = async (county_name) => {
     .sum('sale_dollars__c')
     .from('salesdata2')
     .where({
-      county__c: county_name.toUpperCase(),
+      county__c: county_string.toUpperCase(),
     })
     .andWhere('date__c', '>=', start_date)
     .groupBy('county__c', 'date__c')
@@ -43,5 +48,6 @@ const getLastYearActuals = async (county_name) => {
 };
 
 module.exports = {
+  getLastDateOfActual,
   getLastYearActuals,
 };

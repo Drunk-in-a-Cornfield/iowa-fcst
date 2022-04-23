@@ -1,7 +1,7 @@
 const axios = require('axios');
 const express = require('express');
 
-const { getLastYearActuals } = require('./dbClient');
+const { getLastDateOfActual, getLastYearActuals } = require('./dbClient');
 
 const PORT = 3000;
 const HOST = '0.0.0.0';
@@ -42,17 +42,19 @@ app.get('/cluster-data', async (req, res) => {
 app.get('/forecast', async (req, res) => {
   try {
     const county_string = req.query.county_string;
+    const latest_actual_date = await getLastDateOfActual(county_string);
+    
     const [db_res, ml_res] = await Promise.all([
-      getLastYearActuals(county_string),
+      getLastYearActuals(county_string, latest_actual_date),
       axios.get('http://mlservice:4000/forecast', {
         params: {
           county_string: county_string,
-          date_zero: new Date('10/31/2017').toUTCString(),
+          date_zero: new Date(latest_actual_date).toUTCString(),
         },
       }),
     ]);
 
-    const today = new Date('10/31/2017');
+    const today = new Date(latest_actual_date);
     res.send({
       db: db_res,
       mlservice: ml_res.data.map((d, i) => {
