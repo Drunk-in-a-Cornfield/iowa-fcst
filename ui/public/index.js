@@ -308,50 +308,54 @@ const useForecast = () => {
           .y((d) => yScale(d.value))
       );
 
-    svg
-      .selectAll('.dot-fcst-dl')
-      .data(fcst_records)
-      .enter()
-      .append('circle')
-      .attr('class', 'dot-fcst-dl')
-      .attr('r', 3.5)
-      .attr('cx', (d) => xScale(new Date(d.date)))
-      .attr('cy', (d) => yScale(d.value))
-      .style('fill', 'steelblue')
-      .on('mouseover', (evt, d) => {
-        tooltip.transition().duration(200).style('opacity', 0.9);
-        tooltip
-          .html(
+    for (const [index, record] of Object.values(fcst_records).entries()) {
+      console.log('index:', index);
+      console.log('record:', record);
+      svg
+        .selectAll('.dot-fcst-dl')
+        .data(record)
+        .enter()
+        .append('circle')
+        .attr('class', `dot-fcst-${index}`)
+        .attr('r', 3.5)
+        .attr('cx', (d) => xScale(new Date(d.date)))
+        .attr('cy', (d) => yScale(d.value))
+        .style('fill', colorScale(index))
+        .on('mouseover', (evt, d) => {
+          tooltip.transition().duration(200).style('opacity', 0.9);
+          tooltip
+            .html(
+              `
+              Date: ${new Date(d.date).toLocaleString('en-US', {
+                year: '2-digit',
+                month: '2-digit',
+                day: '2-digit',
+              })}
+              <br />Forecasted Sales: $${d.value}
             `
-            Date: ${new Date(d.date).toLocaleString('en-US', {
-              year: '2-digit',
-              month: '2-digit',
-              day: '2-digit',
-            })}
-            <br />Forecasted Sales: $${d.value}
-          `
-          )
-          .style('left', `${evt.pageX + 15}px`)
-          .style('top', `${evt.pageY + 5}px`);
-      })
-      .on('mouseout', (e) => {
-        tooltip.transition().duration(500).style('opacity', 0);
-      });
+            )
+            .style('left', `${evt.pageX + 15}px`)
+            .style('top', `${evt.pageY + 5}px`);
+        })
+        .on('mouseout', (e) => {
+          tooltip.transition().duration(500).style('opacity', 0);
+        });
 
-    svg
-      .append('path')
-      .datum(fcst_records)
-      .attr('fill', 'none')
-      .attr('stroke', 'steelblue')
-      .attr('stroke-width', 1.5)
-      .attr('class', 'line-fcst-dl')
-      .attr(
-        'd',
-        d3
-          .line()
-          .x((d) => xScale(new Date(d.date)))
-          .y((d) => yScale(d.value))
-      );
+      svg
+        .append('path')
+        .datum(record)
+        .attr('fill', 'none')
+        .attr('stroke', colorScale(index))
+        .attr('stroke-width', 1.5)
+        .attr('class', `line-fcst-${index}`)
+        .attr(
+          'd',
+          d3
+            .line()
+            .x((d) => xScale(new Date(d.date)))
+            .y((d) => yScale(d.value))
+        );
+    }
   };
 
   const renderChart = (props) => {
@@ -415,28 +419,28 @@ const useForecast = () => {
     linechartDiv.innerHTML = '';
 
     const actual_records = data.db;
-    const fcst_records = data.mlservice.deep_learning_fcst;
+    const fcst_records = data.mlservice;
 
     const min_date = new Date(
       Math.min(
         d3.min(actual_records, (d) => d.date),
-        d3.min(fcst_records, (d) => d.date)
+        ...Object.values(fcst_records).map((arr) => d3.min(arr, (d) => d.date))
       )
     );
     const max_date = new Date(
       Math.max(
         d3.max(actual_records, (d) => d.date),
-        d3.max(fcst_records, (d) => d.date)
+        ...Object.values(fcst_records).map((arr) => d3.max(arr, (d) => d.date))
       )
     );
 
     const min_sales = Math.min(
       d3.min(actual_records, (d) => d.value),
-      d3.min(fcst_records, (d) => d.value)
+      ...Object.values(fcst_records).map((arr) => d3.min(arr, (d) => d.value))
     );
     const max_sales = Math.max(
       d3.max(actual_records, (d) => d.value),
-      d3.max(fcst_records, (d) => d.value)
+      ...Object.values(fcst_records).map((arr) => d3.max(arr, (d) => d.value))
     );
 
     renderChart({
