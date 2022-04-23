@@ -255,6 +255,35 @@ const useForecast = () => {
       .text('Forecasted Liquor Sales ($)');
   };
 
+  const renderLinechartPoints = (props) => {
+    const { svg, records, xScale, yScale, colorScale } = props;
+
+    svg
+      .selectAll('.dot')
+      .data(records)
+      .enter()
+      .append('circle')
+      .attr('class', 'dot')
+      .attr('r', 3.5)
+      .attr('cx', (d) => xScale(new Date(d.date)))
+      .attr('cy', (d) => yScale(d.value))
+      .style('fill', 'steelblue');
+
+    svg
+      .append('path')
+      .datum(records)
+      .attr('fill', 'none')
+      .attr('stroke', 'steelblue')
+      .attr('stroke-width', 1.5)
+      .attr(
+        'd',
+        d3
+          .line()
+          .x((d) => xScale(new Date(d.date)))
+          .y((d) => yScale(d.value))
+      );
+  };
+
   const renderChart = (props) => {
     const { records, min_date, max_date, min_fcst, max_fcst } = props;
 
@@ -285,6 +314,7 @@ const useForecast = () => {
 
     // render chart components
     renderAxes({ svg, xScale, yScale });
+    renderLinechartPoints({ svg, records, xScale, yScale, colorScale });
   };
 
   mainDiv.innerHTML = '';
