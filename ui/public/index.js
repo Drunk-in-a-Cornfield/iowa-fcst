@@ -454,19 +454,18 @@ const mainDiv = document.querySelector('div#main');
 
 const chartswitcherDiv = document.querySelector('div#chartswitcher');
 
-const scatterplotButton = document.createElement('button');
-scatterplotButton.id = 'btn-scatterplot';
-scatterplotButton.innerHTML = 'Load Scatterplot';
-scatterplotButton.onclick = useScatterPlot;
-
 const forecastButton = document.createElement('button');
 forecastButton.id = 'btn-forecast';
 forecastButton.innerHTML = 'Load Forecast Chart';
 forecastButton.onclick = useForecast;
 
-chartswitcherDiv.appendChild(scatterplotButton);
-chartswitcherDiv.appendChild(forecastButton);
+const scatterplotButton = document.createElement('button');
+scatterplotButton.id = 'btn-scatterplot';
+scatterplotButton.innerHTML = 'Load Scatterplot';
+scatterplotButton.onclick = useScatterPlot;
 
-// default to scatter plot
-useScatterPlot();
-// useForecast();
+chartswitcherDiv.appendChild(forecastButton);
+chartswitcherDiv.appendChild(scatterplotButton);
+
+// default to forecast chart
+useForecast();
