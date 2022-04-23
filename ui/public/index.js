@@ -309,8 +309,6 @@ const useForecast = () => {
       );
 
     for (const [index, record] of Object.values(fcst_records).entries()) {
-      console.log('index:', index);
-      console.log('record:', record);
       svg
         .selectAll('.dot-fcst-dl')
         .data(record)
