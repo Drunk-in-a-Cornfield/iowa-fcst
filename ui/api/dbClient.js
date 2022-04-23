@@ -9,7 +9,7 @@ const client = require('knex')({
   },
 });
 
-const getData = async (county_name) => {
+const getLastYearActuals = async (county_name) => {
   const latest_actual_date_result = await client
     .distinct('Date')
     .from('salesdata2')
@@ -40,5 +40,5 @@ const getData = async (county_name) => {
 };
 
 module.exports = {
-  getData,
+  getLastYearActuals,
 };

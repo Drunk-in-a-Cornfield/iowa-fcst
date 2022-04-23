@@ -1,6 +1,8 @@
 const axios = require('axios');
 const express = require('express');
 
+const { getLastYearActuals } = require('./dbClient');
+
 const PORT = 3000;
 const HOST = '0.0.0.0';
 
@@ -39,8 +41,7 @@ app.get('/cluster-data', async (req, res) => {
 
 app.get('/forecast', async (req, res) => {
   try {
-    const { getData } = require('./dbClient');
-    const db_res = await getData('POLK');
+    const db_res = await getLastYearActuals('POLK');
 
     const today = new Date();
     const ml_res = await axios.get('http://mlservice:4000/forecast');
@@ -49,7 +50,7 @@ app.get('/forecast', async (req, res) => {
       mlservice: ml_res.data.map((d, i) => {
         const date = new Date(new Date(today).setDate(today.getDate() + i));
         return {
-          date: `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`,
+          date: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
           value: d,
         };
       }),
