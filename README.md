@@ -123,6 +123,9 @@ For containers which don't have bash, use:
     - RMSE (Cluster: 1): 2957.6527283345645
     - RMSE (Cluster: 2): 8523.265087710313
     - RMSE (Cluster: Average): 4954.29079817
+  - Predict Daily Sales by County
+    - Add Sales Pickle Data
+    - Add Random Forest Regression
 
 ## Credentials
 - Database credentials are hard-coded and committed to the repository
