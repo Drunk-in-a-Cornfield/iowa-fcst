@@ -51,6 +51,13 @@ const useForecast = () => {
     const { svg, actual_records, fcst_records, xScale, yScale, colorScale } =
       props;
 
+    const series_names = Object.keys(fcst_records).map((k) =>
+      k
+        .replace('_fcst', '')
+        .replace('_', ' ')
+        .replace(/\b\w/g, (l) => l.toUpperCase())
+    );
+
     const tooltip = d3
       .select('div#linechart-container')
       .append('div')
@@ -77,7 +84,11 @@ const useForecast = () => {
               month: '2-digit',
               day: '2-digit',
             })}
-            <br />Sales: $${d.value}
+            <br />Sales: ${new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              maximumFractionDigits: 0,
+            }).format(d.value)}
           `
           )
           .style('left', `${evt.pageX + 15}px`)
@@ -123,7 +134,12 @@ const useForecast = () => {
                 month: '2-digit',
                 day: '2-digit',
               })}
-              <br />Forecasted Sales: $${d.value}
+              <br />Forecasted Sales: ${new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                maximumFractionDigits: 0,
+              }).format(d.value)}
+              <br />Predicted with <i>${series_names[index]}</i>
             `
             )
             .style('left', `${evt.pageX + 15}px`)
@@ -149,16 +165,9 @@ const useForecast = () => {
         );
     }
 
-    const keys = Object.keys(fcst_records).map((k) =>
-      k
-        .replace('_fcst', '')
-        .replace('_', ' ')
-        .replace(/\b\w/g, (l) => l.toUpperCase())
-    );
-
     svg
       .selectAll('mydots')
-      .data(keys)
+      .data(series_names)
       .enter()
       .append('circle')
       .attr('cx', WIDTH - 220)
@@ -167,12 +176,12 @@ const useForecast = () => {
       }) // HEIGHT - 120 is where the first dot appears. 25 is the distance between dots
       .attr('r', 7)
       .style('fill', function (d) {
-        return colorScale(keys.indexOf(d));
+        return colorScale(series_names.indexOf(d));
       });
 
     svg
       .selectAll('mylabels')
-      .data(keys)
+      .data(series_names)
       .enter()
       .append('text')
       .attr('x', WIDTH - 200)
@@ -180,7 +189,7 @@ const useForecast = () => {
         return HEIGHT - 120 + i * 25;
       }) // HEIGHT - 120 is where the first dot appears. 25 is the distance between dots
       .style('fill', function (d) {
-        return colorScale(keys.indexOf(d));
+        return colorScale(series_names.indexOf(d));
       })
       .text(function (d) {
         return d;
@@ -313,6 +322,20 @@ const useForecast = () => {
     mainDiv.appendChild(countySelectorDiv);
   };
 
+  const renderUserNotes = () => {
+    const notesDiv = document.createElement('div');
+    notesDiv.id = 'notes-container';
+
+    notesDiv.innerHTML = `
+      <u>Usage Notes</u>
+      <ul>
+      <li>Mouseover the data points for more details.</li>
+      </ul>
+    `;
+
+    mainDiv.appendChild(notesDiv);
+  };
+
   mainDiv.innerHTML = '';
 
   const chartTitleDiv = document.createElement('div');
@@ -328,6 +351,6 @@ const useForecast = () => {
   linechartDiv.innerHTML = LOADING_MESSAGE;
 
   fetchDataAndRender('POLK');
-
   renderCountySelector();
+  renderUserNotes();
 };

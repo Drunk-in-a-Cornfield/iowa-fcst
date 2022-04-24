@@ -15,7 +15,7 @@ ul {
 
 div.tooltip {
   position: absolute;
-  padding: 2px;
+  padding: 8px;
   font-size: small;
   background: lightsteelblue;
   border: 0px;

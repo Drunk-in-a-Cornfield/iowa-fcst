@@ -75,11 +75,19 @@ const useScatterPlot = () => {
             <br />city: ${d.city.replace('city_', '')}
             <br />zip_code: ${d.zip_code.replace('zip_code_', '')}
             <br />county_no: ${d.county_no.replace('county_number_', '')}
-            <br /><br />average_monthly_bottles_sold: ${
+            <br /><br />average_monthly_bottles_sold: ${parseInt(
               d.average_monthly_bottles_sold
-            }
-            <br />average_monthly_profit: ${d.average_monthly_profit}
-            <br />average_monthly_sales: ${d.average_monthly_sales}
+            )}
+            <br />average_monthly_profit: ${new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              maximumFractionDigits: 0,
+            }).format(d.average_monthly_profit)}
+            <br />average_monthly_sales: ${new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              maximumFractionDigits: 0,
+            }).format(d.average_monthly_sales)}
             <br /><br />(pca_0, pca_1): (${d.pca_0}, ${d.pca_1})
           `
           )
@@ -177,8 +185,7 @@ const useScatterPlot = () => {
 
   const chartTitleDiv = document.createElement('div');
   chartTitleDiv.id = 'chart-title';
-  chartTitleDiv.innerHTML =
-    'K-Means Clustering (k=3)';
+  chartTitleDiv.innerHTML = 'K-Means Clustering (k=3)';
   mainDiv.appendChild(chartTitleDiv);
 
   const scatterplotDiv = document.createElement('div');
