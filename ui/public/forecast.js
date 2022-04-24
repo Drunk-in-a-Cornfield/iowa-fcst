@@ -104,7 +104,7 @@ const useForecast = () => {
 
     for (const [index, record] of Object.values(fcst_records).entries()) {
       svg
-        .selectAll('.dot-fcst-dl')
+        .selectAll(`.dot-fcst-${index}`)
         .data(record)
         .enter()
         .append('circle')
@@ -148,6 +148,45 @@ const useForecast = () => {
             .y((d) => yScale(d.value))
         );
     }
+
+    const keys = Object.keys(fcst_records).map((k) =>
+      k
+        .replace('_fcst', '')
+        .replace('_', ' ')
+        .replace(/\b\w/g, (l) => l.toUpperCase())
+    );
+
+    svg
+      .selectAll('mydots')
+      .data(keys)
+      .enter()
+      .append('circle')
+      .attr('cx', WIDTH - 220)
+      .attr('cy', function (d, i) {
+        return HEIGHT - 120 + i * 25;
+      }) // HEIGHT - 120 is where the first dot appears. 25 is the distance between dots
+      .attr('r', 7)
+      .style('fill', function (d) {
+        return colorScale(keys.indexOf(d));
+      });
+
+    svg
+      .selectAll('mylabels')
+      .data(keys)
+      .enter()
+      .append('text')
+      .attr('x', WIDTH - 200)
+      .attr('y', function (d, i) {
+        return HEIGHT - 120 + i * 25;
+      }) // HEIGHT - 120 is where the first dot appears. 25 is the distance between dots
+      .style('fill', function (d) {
+        return colorScale(keys.indexOf(d));
+      })
+      .text(function (d) {
+        return d;
+      })
+      .attr('text-anchor', 'left')
+      .style('alignment-baseline', 'middle');
   };
 
   const renderChart = (props) => {
