@@ -62,6 +62,9 @@ concurrently by multiple users, it could take some time for the server to
 catch up. In testing, the server appears to perform decently well with up to
 five concurrent users.
 
+NOTE: The UI uses libraries made available by CDN and thus requires access to
+the internet.
+
 - Enter the root directory and run: docker-compose up
   - You may observe the docker logs to identify when the application is 
     available
