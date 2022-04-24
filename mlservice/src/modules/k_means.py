@@ -13,7 +13,7 @@ def create_k_means_pickle():
     if os.path.exists(k_means_pkl_path):
         df = pd.read_pickle(k_means_pkl_path)
     else:
-        if os.path.exists(features_by_store_pkl_path)
+        if os.path.exists(features_by_store_pkl_path):
             df = pd.read_pickle(features_by_store_pkl_path)
         else:
             create_feature_pickle()
