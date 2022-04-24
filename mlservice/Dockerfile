@@ -8,7 +8,7 @@ RUN echo "alias ll='ls -alF --group-directories-first'" >> /root/.bashrc
 
 RUN pip3 install flask
 RUN pip3 install psycopg2-binary
-RUN pip3 install seaborn pandas matplotlib sklearn sqlalchemy
+RUN pip3 install seaborn pandas matplotlib sklearn sqlalchemy keras tensorflow
 
 # wait for postgrres to be ready before continuing
 # https://www.datanovia.com/en/lessons/docker-compose-wait-for-container-using-wait-tool/docker-compose-wait-for-postgres-container-to-be-ready/
