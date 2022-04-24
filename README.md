@@ -128,6 +128,8 @@ For containers which don't have bash, use:
     - Add Random Forest Regression
     - Add Custom Regression (Random Forest Regression + Gradient Boosting Regression based on K-Means)
     - Add Model Pickles
+  - Pickles
+    - Custom Regression Model Pickle
 
 ## Credentials
 - Database credentials are hard-coded and committed to the repository
