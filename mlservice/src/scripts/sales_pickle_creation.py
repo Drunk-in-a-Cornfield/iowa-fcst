@@ -2,10 +2,11 @@ import os
 import pandas as pd
 import psycopg2
 
+
 ########################
 ### Database Connection
 ########################
-hostname = 'localhost'
+hostname = 'database'
 username = 'root'
 password = 'root'
 database = 'liquor_sales'
@@ -25,10 +26,17 @@ def query(connection, query) :
 ####################
 ### Pickle Creation
 ####################
+county_lookup_pkl_path = './src/modules/county_lookup.pkl'
+k_means_pkl_path ='./src/modules/k_means.pkl'
+pickle_path = './src/pickle/'
+
 def get_county_lookup():
-    path = '../modules/county_lookup.pkl'
-    if os.path.exists(path):
-        df = pd.read_pickle(path)
+    if os.path.exists(county_lookup_pkl_path):
+        df = pd.read_pickle(county_lookup_pkl_path)
+
+def get_county_lookup():
+    if os.path.exists(county_lookup_pkl_path):
+        df = pd.read_pickle(county_lookup_pkl_path)
     else:
         df = pd.read_sql(
             """
@@ -41,7 +49,7 @@ def get_county_lookup():
             """,
             db_connection
         )
-        df.to_pickle(path)
+        df.to_pickle(county_lookup_pkl_path)
     return df
 
 def get_county_number(county):
@@ -49,12 +57,12 @@ def get_county_number(county):
     return int(county_lookup_df[county_lookup_df['county__c'] == county]['county_number__c'])
 
 def store_number2cluster(store_number):
-    cluster_df = pd.read_pickle('../modules/k_means.pkl')
+    cluster_df = pd.read_pickle(k_means_pkl_path)
     return cluster_df.loc[store_number].cluster
 
 def get_sales_data(county):
     county_number = get_county_number(county)
-    path = '../pickle/{county_number}_{county}.pkl'.format(
+    path = pickle_path + '{county_number}_{county}.pkl'.format(
         county=county,
         county_number=county_number
     )
@@ -101,5 +109,4 @@ def auto_sales_pickle():
     for county in county_lookup_df['county__c'].drop_duplicates().tolist():
         get_sales_data(county)
 
-
-auto_sales_pickle()
+# auto_sales_pickle()

@@ -11,7 +11,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 
-df = pd.read_pickle('../modules/features_by_store.pkl')
+df = pd.read_pickle('.src/modules/features_by_store.pkl')
 
 ignore_columns = ['average_monthly_sales', 'average_monthly_profit']
 
