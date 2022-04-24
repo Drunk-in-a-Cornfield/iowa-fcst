@@ -2,6 +2,10 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+button {
+  padding: 5px 100px 5px 100px;
+}
+
 ul {
   padding-left: 10px;
   margin-top: 0px;
@@ -65,12 +69,10 @@ div#countyselector-container {
   background-color: white;
   color: black;
   border: 2px solid #008cba;
-  padding: 10px;
 }
 
 .btn-switcher-clicked {
   background-color: #008cba;
   color: white;
   border: 2px solid #008cba;
-  padding: 10px;
 }
