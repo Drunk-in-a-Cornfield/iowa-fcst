@@ -43,6 +43,11 @@ div#main {
   text-align: center;
 }
 
+div#chart-title {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
 div#zoom-tools-container {
   text-align: center;
 }

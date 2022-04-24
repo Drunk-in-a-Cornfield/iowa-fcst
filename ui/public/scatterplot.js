@@ -4,7 +4,7 @@ const useScatterPlot = () => {
   const WIDTH = 960 - MARGIN.left - MARGIN.right;
   const HEIGHT = 500 - MARGIN.top - MARGIN.bottom;
   const LOADING_MESSAGE = '<br /><br /><br />loading data..';
-  
+
   const renderAxes = (props) => {
     const { svg, xScale, yScale } = props;
 
@@ -174,6 +174,13 @@ const useScatterPlot = () => {
   };
 
   mainDiv.innerHTML = '';
+
+  const chartTitleDiv = document.createElement('div');
+  chartTitleDiv.id = 'chart-title';
+  chartTitleDiv.innerHTML =
+    'K-Means Clustering (k=3)';
+  mainDiv.appendChild(chartTitleDiv);
+
   const scatterplotDiv = document.createElement('div');
   scatterplotDiv.id = 'scatterplot-container';
   mainDiv.appendChild(scatterplotDiv);

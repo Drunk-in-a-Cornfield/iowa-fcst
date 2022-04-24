@@ -315,6 +315,12 @@ const useForecast = () => {
 
   mainDiv.innerHTML = '';
 
+  const chartTitleDiv = document.createElement('div');
+  chartTitleDiv.id = 'chart-title';
+  chartTitleDiv.innerHTML =
+    'Comparing the Forecasts of Different Machine Learning Algorithms';
+  mainDiv.appendChild(chartTitleDiv);
+
   const linechartDiv = document.createElement('div');
   linechartDiv.id = 'linechart-container';
   mainDiv.appendChild(linechartDiv);
