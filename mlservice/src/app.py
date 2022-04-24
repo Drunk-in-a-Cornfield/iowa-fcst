@@ -80,17 +80,6 @@ def cluster_data():
     
     return df_all.to_json()
 
-# @app.route('/forecast')
-# def forecast():
-#     county_string = request.args.get('county_string')
-#     date_zero = request.args.get('date_zero')
-
-#     deep_learning_result = serve_model(county_string, datetime.datetime.strptime(date_zero, "%a, %d %b %Y %H:%M:%S %Z"), 10, load_model())
-
-#     return json.dumps({
-#         'deep_learning_fcst':[f.astype(float) for f in deep_learning_result]
-#     })
-
 @app.route('/forecast')
 def forecast2():
     county_string = request.args.get('county_string')
@@ -103,8 +92,11 @@ def forecast2():
         date_zero=str(datetime.datetime.strptime(date_zero, "%a, %d %b %Y %H:%M:%S %Z").date()),
         n=10
     )
-    return json.dumps({
-        'deep_learning_fcst': [float(f) for f in pred_df['Predicted'].tolist()]
+
+    deep_learning_result = serve_model(county_string, datetime.datetime.strptime(date_zero, "%a, %d %b %Y %H:%M:%S %Z"), 10, load_model())
+
+    return json.dumps({'random_forest_regressor': [float(f) for f in pred_df['Predicted'].tolist()],
+                       'deep_learning_fcst' : [f.astype(float) for f in deep_learning_result] })
 
 @app.route('/sales_by_year')
 def sales_by_year():
