@@ -1,22 +1,11 @@
-from sklearn import metrics
-from sklearn import svm
-from sklearn import tree
-from sklearn.linear_model import BayesianRidge
-from sklearn.linear_model import ElasticNet
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-import matplotlib.pyplot as plt
 import os
 import pandas as pd
 import psycopg2
-import numpy as np
 
 
 ########################
 ### Database Connection
 ########################
-
 hostname = 'localhost'
 username = 'root'
 password = 'root'
@@ -104,6 +93,7 @@ def get_sales_data(county):
         for store_number in df['store_number__c'].drop_duplicates().tolist():
             cluster_dict[store_number] = store_number2cluster(store_number)
         df['cluster__c'] = df['store_number__c'].apply(lambda x: cluster_dict[x])
+        df = df.sort_values('date__c')
         df.to_pickle(path)
     return df
 
@@ -111,3 +101,6 @@ def auto_sales_pickle():
     county_lookup_df = get_county_lookup()
     for county in county_lookup_df['county__c'].drop_duplicates().tolist():
         get_sales_data(county)
+
+
+auto_sales_pickle()
