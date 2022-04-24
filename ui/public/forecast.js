@@ -55,6 +55,7 @@ const useForecast = () => {
       k
         .replace('_fcst', '')
         .replace('_', ' ')
+        .replace('_regressor', ' Regressor')
         .replace(/\b\w/g, (l) => l.toUpperCase())
     );
 
