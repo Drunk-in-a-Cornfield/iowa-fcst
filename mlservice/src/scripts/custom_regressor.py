@@ -1,16 +1,8 @@
+from scripts.sales_pickle_creation import *
 from functools import reduce
 from sklearn import metrics
-from sklearn import svm
-from sklearn.svm import LinearSVR
-from sklearn import tree
-from sklearn.linear_model import BayesianRidge
-from sklearn.linear_model import ElasticNet
-from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
 import datetime
 import matplotlib.pyplot as plt
 import numpy as np
@@ -19,6 +11,32 @@ import pandas as pd
 import pickle
 import psycopg2
 import seaborn as sns
+
+
+county_lookup_path = './src/modules/county_lookup.pkl'
+custom_regressor_path = './src/modules/'
+# custom_regressor_path = './src/custom_regressor/'
+pickle_path = './src/pickle/'
+
+########################
+### Database Connection
+########################
+hostname = 'database'
+username = 'root'
+password = 'root'
+database = 'liquor_sales'
+
+db_connection = psycopg2.connect(
+    host=hostname,
+    user=username,
+    password=password,
+    dbname=database
+)
+
+def query(connection, query) :
+    cursor = connection.cursor()
+    cursor.execute(query)
+    return cursor.fetchall()
 
 ##################
 ### Predict Sales
@@ -119,8 +137,9 @@ def get_next_n_days(date='2017-11-01', n=10):
     results = [d + datetime.timedelta(days=i) for i in range(n)]
     return [str(i.date()) for i in results]
 
-def get_cluster_dict():
-    path = '../custom_regressor/{county_number}_{county}.pkl'.format(
+def get_cluster_dict(county):
+    county_number = get_county_number(county)
+    path = custom_regressor_path + '{county_number}_{county}.pkl'.format(
         county_number=county_number,
         county=county
     )
@@ -131,10 +150,10 @@ def get_cluster_dict():
         factor_dict = {}
         test_result_dict = {}
         regressor_dict = {}
-        df = df2.copy()
+        df = get_sales_data(county)
         for cluster in df['cluster__c'].drop_duplicates().tolist():
             try:
-                df = df2.copy()
+                df = get_sales_data(county)
                 df = df[df['cluster__c'] == cluster]
                 df = transformation(df)
                 X_columns = ['date_quarter__c', 'date_dow__c']
@@ -150,6 +169,8 @@ def get_cluster_dict():
                     regressor = GradientBoostingRegressor()
                 else:
                     regressor = RandomForestRegressor()
+                print('X_train', X_train)
+                print('y_train', y_train)
                 regressor.fit(X_train, y_train['sale_dollars__c'])
                 y_pred = regressor.predict(X_test)
                 y_test_sales = y_test['sale_dollars__c'].tolist()
@@ -177,15 +198,18 @@ def get_cluster_dict():
     return result_dict
 
 def get_prediction(df, cluster_dict, date='2017-10-15', n=40):
+    print('cluster_dict', cluster_dict)
     regressor_dict = cluster_dict['regressor_dict']
     factor_dict = cluster_dict['factor_dict']
     results = []
+    print('df', df)
+    print('cluster_dict', cluster_dict)
     for cluster in [0.0, 1.0, 2.0]:
         try:
             regressor = regressor_dict[cluster]
             date__c = get_next_n_days(date, n)
             date_quarter__c = [float( get_quarter_dow(i)['date_quarter__c'] ) for i in date__c]
-            date_dow__c = [float( get_quarter_dow(i)['date_dow__c'] )for i in date__c]
+            date_dow__c = [float( get_quarter_dow(i)['date_dow__c'] ) for i in date__c]
             test_data = pd.DataFrame({
                 'date__c': date__c,
                 'date_quarter__c': date_quarter__c,
@@ -228,9 +252,8 @@ def get_combined_result(pred_df):
     return combined_result
 
 def get_county_lookup():
-    path = '../modules/county_lookup.pkl'
-    if os.path.exists(path):
-        df = pd.read_pickle(path)
+    if os.path.exists(county_lookup_path):
+        df = pd.read_pickle(county_lookup_path)
     else:
         df = pd.read_sql(
             """
@@ -243,39 +266,45 @@ def get_county_lookup():
             """,
             db_connection
         )
-        df.to_pickle(path)
+        df.to_pickle(county_lookup_path)
     return df
 
 def get_county_number(county):
     county_lookup_df = get_county_lookup()
     return int(county_lookup_df[county_lookup_df['county__c'] == county]['county_number__c'])
 
-
 # Auto Generate Cluster Dict Pickle
 def auto_cluster_dict_pickle():
     county_lookup_df = get_county_lookup()
     for county in county_lookup_df['county__c'].drop_duplicates().tolist():
         county_number = get_county_number(county)
-        df = pd.read_pickle('../pickle/{county_number}_{county}.pkl'.format(
+        df = pd.read_pickle(pickle_path + '{county_number}_{county}.pkl'.format(
             county_number=county_number,
             county=county
         ))
-        df2 = df.copy()
-        cluster_dict = get_cluster_dict()
+        cluster_dict = get_cluster_dict(county)
         pred_df = get_prediction(transformation(df), cluster_dict, date='2017-10-15', n=40)
         combined_result = get_combined_result(pred_df)
 
+def serve_custom_regression_model(county, date_zero, n=10):
+    county_number = get_county_number(county)
+    path = custom_regressor_path + '{county_number}_{county}.pkl'.format(
+        county_number=county_number,
+        county=county
+    )
+    if os.path.exists(path):
+        with open(path, 'rb') as handle:
+            cluster_dict = pickle.load(handle)
+        pred_df = get_prediction(df=None, cluster_dict=cluster_dict, date=date_zero, n=n)
+    else:
+        df = pd.read_pickle(pickle_path + '{county_number}_{county}.pkl'.format(
+            county_number=county_number,
+            county=county
+        ))
+        cluster_dict = get_cluster_dict(county)
+        pred_df = get_prediction(transformation(df), cluster_dict, date=date_zero, n=n)
+        # combined_result = get_combined_result(pred_df)
+    return pred_df
 
-county = 'ALLAMAKEE'
-county_number = get_county_number(county)
-df = pd.read_pickle('../pickle/{county_number}_{county}.pkl'.format(
-    county_number=county_number,
-    county=county
-))
-df2 = df.copy()
-cluster_dict = get_cluster_dict()
-pred_df = get_prediction(transformation(df), cluster_dict, date='2017-10-15', n=40)
-combined_result = get_combined_result(pred_df)
-
-sns.lineplot(data=combined_result[-50:])
-plt.show()
+# sns.lineplot(data=combined_result[-50:])
+# plt.show()

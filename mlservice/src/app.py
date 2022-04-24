@@ -6,11 +6,12 @@ import pandas as pd
 from modules.features_by_store import create_feature_pickle
 from modules.k_means import create_k_means_pickle
 from modules.ui_data import get_pca_coords, reverse_one_hot
+from modules.serve_rnn_model import serve_model, load_model
+from scripts.custom_regressor import serve_custom_regression_model, get_cluster_dict
 
 ########################
 ### Database Connection
 ########################
-
 hostname = 'database'
 username = 'root'
 password = 'root'
@@ -31,25 +32,27 @@ def query(connection, query) :
 ##############################
 ### Create / load pickle files
 ##############################
+features_by_store_pkl_path = './src/modules/features_by_store.pkl'
+k_means_pkl_path = './src/modules/k_means.pkl'
 
-print('checking for features_by_store.pkl', flush=True)
-if not exists('./src/modules/features_by_store.pkl'):
-    print('did not detect ./src/modules/features_by_store.pkl; building now', flush=True)
+print('checking for {path}'.format(path=features_by_store_pkl_path), flush=True)
+if not exists(features_by_store_pkl_path):
+    print('did not detect {path}; building now'.format(path=features_by_store_pkl_path), flush=True)
     create_feature_pickle()
-    print('done building ./src/modules/features_by_store.pkl', flush=True)
+    print('done building {path}'.format(path=features_by_store_pkl_path), flush=True)
 else:
-    print('found existing feature_by_store.pkl', flush=True)
+    print('found existing {path}'.format(path=features_by_store_pkl_path), flush=True)
 
-print('checking for existing k_means.pkl')        
-if not exists('./src/modules/k_means.pkl'):
-    print('did not detect ./src/modules/k_means.pkl; building now', flush=True)
+print('checking for existing {path}'.format(path=k_means_pkl_path))        
+if not exists(k_means_pkl_path):
+    print('did not detect {path}; building now'.format(path=k_means_pkl_path), flush=True)
     create_k_means_pickle()
-    print('done building ./src/modules/k_means.pkl', flush=True)
+    print('done building {path}'.format(path=k_means_pkl_path), flush=True)
 else:
-    print('found existing k_means.pkl', flush=True)
+    print('found existing {path}'.format(path=k_means_pkl_path), flush=True)
 
-features_by_store_cached = pd.read_pickle('./src/modules/features_by_store.pkl')
-k_means_cached = pd.read_pickle('./src/modules/k_means.pkl')
+features_by_store_cached = pd.read_pickle(features_by_store_pkl_path)
+k_means_cached = pd.read_pickle(k_means_pkl_path)
 
 ##########
 ### Flask
@@ -73,6 +76,33 @@ def cluster_data():
     df_all = df_k_means.join(df_pca_coords)
     
     return df_all.to_json()
+
+# @app.route('/forecast')
+# def forecast():
+#     county_string = request.args.get('county_string')
+#     date_zero = request.args.get('date_zero')
+
+#     deep_learning_result = serve_model(county_string, datetime.datetime.strptime(date_zero, "%a, %d %b %Y %H:%M:%S %Z"), 10, load_model())
+
+#     return json.dumps({
+#         'deep_learning_fcst':[f.astype(float) for f in deep_learning_result]
+#     })
+
+@app.route('/forecast')
+def forecast2():
+    county_string = request.args.get('county_string')
+    date_zero = request.args.get('date_zero')
+    # county_string = 'POLK'
+    # date_zero = '2017-10-15'
+    get_cluster_dict(county=county_string)
+    pred_df = serve_custom_regression_model(
+        county=county_string,
+        date_zero=str(datetime.datetime.strptime(date_zero, "%a, %d %b %Y %H:%M:%S %Z").date()),
+        n=10
+    )
+    return json.dumps({
+        'deep_learning_fcst': [float(f) for f in pred_df['Predicted'].tolist()]
+    })
 
 @app.route('/sales_by_year')
 def sales_by_year():
