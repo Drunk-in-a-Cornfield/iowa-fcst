@@ -105,6 +105,7 @@ def forecast2():
     )
     return json.dumps({
         'deep_learning_fcst': [float(f) for f in pred_df['Predicted'].tolist()]
+    })
 
 @app.route('/sales_by_year')
 def sales_by_year():
