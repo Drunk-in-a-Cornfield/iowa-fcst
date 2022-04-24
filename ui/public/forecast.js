@@ -248,8 +248,6 @@ const useForecast = () => {
   // needed to put this in a function so it can change when a new county is selected
   const fetchDataAndRender = (county_string) => {
     d3.json(`/forecast?county_string=${county_string}`).then((data) => {
-      console.log('data:', data);
-
       linechartDiv.innerHTML = '';
 
       const actual_records = data.db;
