@@ -103,3 +103,8 @@ WHERE
 	OR volume_sold_liters__c = 0
 	OR volume_sold_gallons__c IS NULL
 	OR volume_sold_gallons__c = 0;
+
+-- create index to optimize ui queries
+
+CREATE INDEX recent_tx ON salesdata2 (date__c)
+WHERE date__c >= '2016-01-01'::date;
