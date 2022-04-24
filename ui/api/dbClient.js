@@ -13,7 +13,7 @@ const getLastDateOfActual = async (county_string) => {
   const latest_actual_date_result = await client
     .distinct('Date')
     .from('salesdata2')
-    .where({ county__c: county_string.toUpperCase() })
+    .where({ county__c: county_string })
     .orderBy('Date', 'desc')
     .limit(1);
 
@@ -32,7 +32,7 @@ const getLastYearActuals = async (county_string, latest_actual_date) => {
     .sum('sale_dollars__c')
     .from('salesdata2')
     .where({
-      county__c: county_string.toUpperCase(),
+      county__c: county_string,
     })
     .andWhere('date__c', '>=', start_date)
     .groupBy('county__c', 'date__c')
