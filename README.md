@@ -126,6 +126,8 @@ For containers which don't have bash, use:
   - Predict Daily Sales by County
     - Add Sales Pickle Data
     - Add Random Forest Regression
+    - Add Custom Regression (Random Forest Regression + Gradient Boosting Regression based on K-Means)
+    - Add Model Pickles
 
 ## Credentials
 - Database credentials are hard-coded and committed to the repository
