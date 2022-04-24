@@ -14,8 +14,8 @@ import seaborn as sns
 
 
 county_lookup_path = './src/modules/county_lookup.pkl'
-custom_regressor_path = './src/modules/'
-# custom_regressor_path = './src/custom_regressor/'
+custom_regressor_path = './src/custom_regressor/'
+# custom_regressor_path = './src/modules/'
 pickle_path = './src/pickle/'
 
 ########################
