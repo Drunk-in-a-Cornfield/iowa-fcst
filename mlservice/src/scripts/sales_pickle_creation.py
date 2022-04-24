@@ -33,6 +33,10 @@ pickle_path = './src/pickle/'
 def get_county_lookup():
     if os.path.exists(county_lookup_pkl_path):
         df = pd.read_pickle(county_lookup_pkl_path)
+
+def get_county_lookup():
+    if os.path.exists(county_lookup_pkl_path):
+        df = pd.read_pickle(county_lookup_pkl_path)
     else:
         df = pd.read_sql(
             """
@@ -62,7 +66,7 @@ def get_sales_data(county):
         county=county,
         county_number=county_number
     )
-    if not os.path.exists(path):
+    if os.path.exists(path):
         df = pd.read_pickle(path)
     else:
         df = pd.read_sql(
@@ -105,3 +109,4 @@ def auto_sales_pickle():
     for county in county_lookup_df['county__c'].drop_duplicates().tolist():
         get_sales_data(county)
 
+# auto_sales_pickle()

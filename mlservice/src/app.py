@@ -2,13 +2,14 @@ from flask import Flask, request, render_template, send_file
 from os.path import exists
 import datetime
 import json
-import psycopg2
+import os
 import pandas as pd
+import psycopg2
 
 from modules.features_by_store import create_feature_pickle
 from modules.k_means import create_k_means_pickle
 from modules.ui_data import get_pca_coords, reverse_one_hot
-# from modules.serve_rnn_model import serve_model, load_model
+from modules.serve_rnn_model import serve_model, load_model
 from scripts.custom_regressor import serve_custom_regression_model, get_cluster_dict
 
 ########################
@@ -104,7 +105,6 @@ def forecast2():
     )
     return json.dumps({
         'deep_learning_fcst': [float(f) for f in pred_df['Predicted'].tolist()]
-    })
 
 @app.route('/sales_by_year')
 def sales_by_year():
