@@ -1,23 +1,29 @@
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import MinMaxScaler
+from features_by_store import *
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
 
+features_by_store_pkl_path = './src/modules/features_by_store.pkl'
+k_means_pkl_path = './src/modules/k_means.pkl'
+
 def create_k_means_pickle():
-    path = './src/modules/k_means.pkl'
-    if os.path.exists(path):
-        df = pd.read_pickle(path)
+    if os.path.exists(k_means_pkl_path):
+        df = pd.read_pickle(k_means_pkl_path)
     else:
+        if os.path.exists(features_by_store_pkl_path)
+            df = pd.read_pickle(features_by_store_pkl_path)
+        else:
+            create_feature_pickle()
+            df = pd.read_pickle(features_by_store_pkl_path)
         ignore_columns = [
             'average_monthly_sales',
             'average_monthly_profit'
         ]
         X_columns = [i for i in df.columns.tolist() if i not in ignore_columns]
         X = df[X_columns]
-
-
         # Elbow Method to Find K
         scaler = MinMaxScaler()
         scaler.fit(X)
@@ -34,12 +40,9 @@ def create_k_means_pickle():
             )
             kmeans.fit(X)
             inertia.append(kmeans.inertia_)
-
-
         # plt.plot([i for i in n_clusters], inertia)
         # plt.xticks([i for i in n_clusters], n_clusters)
         # plt.show()
-
         # k = 3
         kmeans = KMeans(
                 n_clusters=3,
@@ -49,9 +52,8 @@ def create_k_means_pickle():
                 random_state=59
             )
         kmeans.fit(X)
-
         df['cluster'] = kmeans.labels_
         print('Number of Stores (Cluster 0): ', len(df[df['cluster'] == 0]))
         print('Number of Stores (Cluster 1): ', len(df[df['cluster'] == 1]))
         print('Number of Stores (Cluster 2): ', len(df[df['cluster'] == 2]))
-        df.to_pickle(path)
+        df.to_pickle(k_means_pkl_path)
