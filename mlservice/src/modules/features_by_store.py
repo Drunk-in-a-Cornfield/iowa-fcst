@@ -352,7 +352,7 @@ def create_feature_average_monthly_profit_by_store_number():
     return df
 
 def create_feature_pickle():
-    path = '../src/modules/features_by_store.pkl'
+    path = './src/modules/features_by_store.pkl'
     if os.path.exists(path):
         df = pd.read_pickle(path)
     else:
