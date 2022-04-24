@@ -24,7 +24,7 @@ const useScatterPlot = () => {
         'transform',
         `translate(${
           (WIDTH - MARGIN.left - MARGIN.right) / 2 + MARGIN.left
-        }, 40)`
+        }, 35)`
       )
       .style('fill', 'black')
       .text('PCA-0');
