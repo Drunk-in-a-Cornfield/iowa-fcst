@@ -55,3 +55,7 @@ div#notes-container {
   font-size: small;
   line-height: 1.6;
 }
+
+div#countyselector-container {
+  margin-top: 25px;
+}

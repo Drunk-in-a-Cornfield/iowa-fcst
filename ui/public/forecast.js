@@ -197,7 +197,82 @@ const useForecast = () => {
     });
   };
 
-  const renderCountySelector = () => {};
+  // needed to put this in a function so it can change when a new county is selected
+  const fetchDataAndRender = (county_string) => {
+    d3.json(`/forecast?county_string=${county_string}`).then((data) => {
+      console.log('data:', data);
+
+      linechartDiv.innerHTML = '';
+
+      const actual_records = data.db;
+      const fcst_records = data.mlservice;
+
+      const min_date = new Date(
+        Math.min(
+          d3.min(actual_records, (d) => d.date),
+          ...Object.values(fcst_records).map((arr) =>
+            d3.min(arr, (d) => d.date)
+          )
+        )
+      );
+      const max_date = new Date(
+        Math.max(
+          d3.max(actual_records, (d) => d.date),
+          ...Object.values(fcst_records).map((arr) =>
+            d3.max(arr, (d) => d.date)
+          )
+        )
+      );
+
+      const min_sales = Math.min(
+        d3.min(actual_records, (d) => d.value),
+        ...Object.values(fcst_records).map((arr) => d3.min(arr, (d) => d.value))
+      );
+      const max_sales = Math.max(
+        d3.max(actual_records, (d) => d.value),
+        ...Object.values(fcst_records).map((arr) => d3.max(arr, (d) => d.value))
+      );
+
+      renderChart({
+        actual_records,
+        fcst_records,
+        min_date,
+        max_date,
+        min_sales,
+        max_sales,
+      });
+    });
+  };
+
+  const renderCountySelector = () => {
+    const countySelectorDiv = document.createElement('div');
+    countySelectorDiv.id = 'countyselector-container';
+
+    countySelectorDiv.innerHTML = 'Choose a county: ';
+
+    const select = document.createElement('select');
+    select.id = 'countyselector-select';
+
+    counties.forEach((county) => {
+      const option = document.createElement('option');
+      option.value = county;
+      option.innerHTML = county;
+
+      if (county === 'POLK') option.selected = 'selected';
+
+      select.appendChild(option);
+    });
+
+    function onChange() {
+      linechartDiv.innerHTML = LOADING_MESSAGE;
+      fetchDataAndRender(this.value);
+    }
+
+    select.addEventListener('change', onChange, false);
+
+    countySelectorDiv.appendChild(select);
+    mainDiv.appendChild(countySelectorDiv);
+  };
 
   mainDiv.innerHTML = '';
 
@@ -207,45 +282,7 @@ const useForecast = () => {
 
   linechartDiv.innerHTML = LOADING_MESSAGE;
 
-  d3.json('/forecast?county_string=POLK').then((data) => {
-    console.log('data:', data);
+  fetchDataAndRender('POLK');
 
-    linechartDiv.innerHTML = '';
-
-    const actual_records = data.db;
-    const fcst_records = data.mlservice;
-
-    const min_date = new Date(
-      Math.min(
-        d3.min(actual_records, (d) => d.date),
-        ...Object.values(fcst_records).map((arr) => d3.min(arr, (d) => d.date))
-      )
-    );
-    const max_date = new Date(
-      Math.max(
-        d3.max(actual_records, (d) => d.date),
-        ...Object.values(fcst_records).map((arr) => d3.max(arr, (d) => d.date))
-      )
-    );
-
-    const min_sales = Math.min(
-      d3.min(actual_records, (d) => d.value),
-      ...Object.values(fcst_records).map((arr) => d3.min(arr, (d) => d.value))
-    );
-    const max_sales = Math.max(
-      d3.max(actual_records, (d) => d.value),
-      ...Object.values(fcst_records).map((arr) => d3.max(arr, (d) => d.value))
-    );
-
-    renderChart({
-      actual_records,
-      fcst_records,
-      min_date,
-      max_date,
-      min_sales,
-      max_sales,
-    });
-
-    renderCountySelector();
-  });
+  renderCountySelector();
 };
