@@ -11,10 +11,10 @@ const client = require('knex')({
 
 const getLastDateOfActual = async (county_string) => {
   const latest_actual_date_result = await client
-    .distinct('Date')
     .from('salesdata2')
     .where({ county__c: county_string })
-    .orderBy('Date', 'desc')
+    .andWhere('date__c', '>=', '2016-01-01')
+    .orderBy('date__c', 'desc')
     .limit(1);
 
   const latest_actual_date = latest_actual_date_result[0].Date;
