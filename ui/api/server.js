@@ -1,6 +1,8 @@
 const axios = require('axios');
 const express = require('express');
 
+const { getLastDateOfActual, getLastYearActuals } = require('./dbClient');
+
 const PORT = 3000;
 const HOST = '0.0.0.0';
 
@@ -33,6 +35,54 @@ app.get('/cluster-data', async (req, res) => {
 
     res.send(data);
   } catch (e) {
+    res.send(e.message);
+  }
+});
+
+app.get('/forecast', async (req, res) => {
+  try {
+    const county_string = req.query.county_string;
+    const latest_actual_date = await getLastDateOfActual(county_string);
+
+    const [db_res, ml_res] = await Promise.all([
+      getLastYearActuals(county_string, latest_actual_date),
+      axios.get('http://mlservice:4000/forecast', {
+        params: {
+          county_string: county_string,
+          date_zero: new Date(latest_actual_date).toUTCString(),
+        },
+      }),
+    ]);
+
+    const last_actual = new Date(latest_actual_date);
+
+    res.send({
+      db: db_res,
+      mlservice: {
+        deep_learning_fcst: ml_res.data.deep_learning_fcst.map((d, i) => {
+          const date = new Date(
+            new Date(last_actual).setDate(last_actual.getDate() + i)
+          );
+          return {
+            date: date.getTime(),
+            value: parseInt(d),
+          };
+        }),
+        dummy_fcst: (() => {
+          return ml_res.data.deep_learning_fcst.map((d, i) => {
+            const date = new Date(
+              new Date(last_actual).setDate(last_actual.getDate() + i)
+            );
+            return {
+              date: date.getTime(),
+              value: parseInt(d) * 1.25,
+            };
+          });
+        })(),
+      },
+    });
+  } catch (e) {
+    console.log(e.message);
     res.send(e.message);
   }
 });

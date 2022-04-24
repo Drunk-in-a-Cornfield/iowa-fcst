@@ -1,11 +1,15 @@
-from flask import Flask
-from os.path import exists
-import psycopg2
+import datetime
+import json
 import pandas as pd
+import psycopg2
+
+from flask import Flask, request
+from os.path import exists
 
 from modules.features_by_store import create_feature_pickle
 from modules.k_means import create_k_means_pickle
 from modules.ui_data import get_pca_coords, reverse_one_hot
+from modules.serve_rnn_model import serve_model, load_model
 
 ########################
 ### Database Connection
@@ -73,6 +77,17 @@ def cluster_data():
     df_all = df_k_means.join(df_pca_coords)
     
     return df_all.to_json()
+
+@app.route('/forecast')
+def forecast():
+    county_string = request.args.get('county_string')
+    date_zero = request.args.get('date_zero')
+
+    deep_learning_result = serve_model(county_string, datetime.datetime.strptime(date_zero, "%a, %d %b %Y %H:%M:%S %Z"), 10, load_model())
+
+    return json.dumps({
+        'deep_learning_fcst':[f.astype(float) for f in deep_learning_result]
+    })
 
 @app.route('/sales_by_year')
 def sales_by_year():
